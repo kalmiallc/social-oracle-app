@@ -1,4 +1,3 @@
-import { useAccount } from '@wagmi/vue';
 import { type Address } from 'viem';
 import { ContractType } from '~/lib/config/contracts';
 
@@ -9,8 +8,8 @@ export default function useFixedMarketMaker() {
   const { checkCollateralAllowance, getTokenStore, loadToken } = useCollateralToken();
   const { checkConditionalApprove } = useConditionalToken();
   const { initContract } = useContracts();
-  const { address } = useAccount();
   const tokenStore = getTokenStore();
+  const userStore = useUserStore();
 
   /**
    *
@@ -139,7 +138,7 @@ export default function useFixedMarketMaker() {
    */
   async function getFundingBalance(fpmmContractAddress: Address) {
     const contract = await initContract(ContractType.FPMM, fpmmContractAddress);
-    return await contract.read.balanceOf([address.value]);
+    return await contract.read.balanceOf([userStore.wallet.address]);
   }
 
   /**

@@ -12,13 +12,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useAccount, useConnect } from '@wagmi/vue';
-import { darkTheme, enUS, dateEnUS } from 'naive-ui';
+import { darkTheme, dateEnUS, enUS } from 'naive-ui';
 import { themeOverrides } from './lib/config/naive-ui';
-
-const userStore = useUserStore();
-const { isConnected, isConnecting, isReconnecting } = useAccount();
-const { connectors, connect } = useConnect();
 
 const $i18n = useI18n();
 window.$i18n = $i18n;
@@ -48,14 +43,4 @@ useHead({
     lang,
   },
 });
-
-watch(
-  () => userStore.loggedIn,
-  _ => {
-    if (!isConnected.value && !isConnecting.value && !isReconnecting.value && connectors.length) {
-      connect({ connector: connectors[0] });
-    }
-  },
-  { immediate: true }
-);
 </script>

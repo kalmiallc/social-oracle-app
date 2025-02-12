@@ -17,7 +17,7 @@
     </div>
 
     <div class="flex">
-      <div v-if="isConnected && userStore.loggedIn" class="flex-cc text-white">
+      <div v-if="userStore.isConnected && userStore.loggedIn" class="flex-cc text-white">
         <!-- <HeaderNotifications /> -->
         <HeaderProfile />
       </div>
@@ -27,8 +27,5 @@
 </template>
 
 <script setup lang="ts">
-import { useAccount } from '@wagmi/vue';
-
 const userStore = useUserStore();
-const { isConnected } = useAccount();
 </script>

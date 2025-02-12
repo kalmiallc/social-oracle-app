@@ -1,14 +1,13 @@
-import { useAccount } from '@wagmi/vue';
 import { type Address, zeroHash } from 'viem';
 import { ContractType } from '~/lib/config/contracts';
 
 export default function useConditionalToken() {
   const { getTokenStore } = useCollateralToken();
   const { initContract } = useContracts();
-  const { address } = useAccount();
   const txWait = useTxWait();
   const message = useMessage();
   const config = useRuntimeConfig();
+  const userStore = useUserStore();
 
   /**
    * Checks if conditional tokens are approved for all on given FPMM contract, and approves them if they are not.
@@ -20,7 +19,7 @@ export default function useConditionalToken() {
     const contract = await initContract(ContractType.CONDITIONAL_TOKEN);
 
     try {
-      const isApproved = await contract.read.isApprovedForAll([address.value, fpmmContractAddress]);
+      const isApproved = await contract.read.isApprovedForAll([userStore.wallet.address, fpmmContractAddress]);
       if (!isApproved) {
         txWait.hash.value = await contract.write.setApprovalForAll([fpmmContractAddress, true]);
         const receipt = await txWait.wait();
@@ -44,7 +43,7 @@ export default function useConditionalToken() {
   async function getConditionalBalance(outcomePositionId: string) {
     const contract = await initContract(ContractType.CONDITIONAL_TOKEN);
 
-    return await contract.read.balanceOf([address.value, outcomePositionId]);
+    return await contract.read.balanceOf([userStore.wallet.address, outcomePositionId]);
   }
 
   /**

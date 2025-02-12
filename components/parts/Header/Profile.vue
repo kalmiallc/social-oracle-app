@@ -10,9 +10,13 @@
     v-model:show="isOpened"
   >
     <div class="flex items-center bg-grey-light py-2 px-[6px] cursor-pointer rounded-lg">
-      <jazzicon class="cursor-pointer rounded-[50%] w-[40px] h-[40px]" :address="address" :diameter="40" />
+      <jazzicon
+        class="cursor-pointer rounded-[50%] w-[40px] h-[40px]"
+        :address="userStore?.wallet?.address"
+        :diameter="40"
+      />
       <div class="ml-2 font-medium text-[14px] leading-[20px]">
-        {{ truncateWallet(address as string) }}
+        {{ truncateWallet(userStore?.wallet?.address as string) }}
       </div>
       <NuxtIcon
         name="icon/arrow-down"
@@ -24,12 +28,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useAccount } from '@wagmi/vue';
 import { truncateWallet } from '~/lib/misc/strings';
 
 const { t } = useI18n();
 const router = useRouter();
-const { address } = useAccount();
 const userStore = useUserStore();
 
 const isOpened = ref(false);

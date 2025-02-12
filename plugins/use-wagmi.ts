@@ -1,8 +1,6 @@
-import { http, createConfig, WagmiPlugin, createStorage } from '@wagmi/vue';
-import { baseSepolia, songbird } from '@wagmi/vue/chains';
-import { type Chain } from '@wagmi/vue/chains';
 import { VueQueryPlugin } from '@tanstack/vue-query';
-import { injected, metaMask, coinbaseWallet, walletConnect } from '@wagmi/vue/connectors';
+import { createConfig, createStorage, http, WagmiPlugin } from '@wagmi/vue';
+import { baseSepolia, songbird, type Chain } from '@wagmi/vue/chains';
 import { AppEnv } from '~/lib/types/config';
 
 export default defineNuxtPlugin(nuxtApp => {
@@ -16,18 +14,6 @@ export default defineNuxtPlugin(nuxtApp => {
 
   const wagmiConfig = createConfig({
     chains,
-    connectors: [
-      injected(),
-      metaMask({
-        dappMetadata: {
-          name: 'Social Oracle Metamask wallet',
-          url: 'https://socialoracle.xyz',
-          iconUrl: '/favicon.svg',
-        },
-      }),
-      coinbaseWallet({ appName: 'Social Oracle Coinbase wallet', appLogoUrl: '/favicon.svg' }),
-      walletConnect({ projectId: '' }),
-    ],
     multiInjectedProviderDiscovery: false,
     storage: createStorage({ storage: window.sessionStorage }),
     transports,

@@ -82,7 +82,7 @@
             class="w-full"
             :btnClass="[' !font-bold']"
             :size="'large'"
-            :disabled="!isConnected || !enoughCollateralBalance"
+            :disabled="!userStore.isConnected || !enoughCollateralBalance"
             :loading="loading"
             @click="buyOutcome"
           >
@@ -154,7 +154,7 @@
           </div>
 
           <BasicButton
-            :disabled="!isConnected || !enoughConditionalBalance"
+            :disabled="!userStore.isConnected || !enoughConditionalBalance"
             class="w-full"
             :btnClass="[' !font-bold']"
             :size="'large'"
@@ -223,7 +223,7 @@
             class="w-full"
             :btnClass="['bg-statusBlue hover:bg-statusBlue-hover !font-bold']"
             :size="'large'"
-            :disabled="!isConnected || !enoughCollateralBalance || !isFundEnabled"
+            :disabled="!userStore.isConnected || !enoughCollateralBalance || !isFundEnabled"
             :loading="loading"
             @click="fund"
           >
@@ -240,7 +240,6 @@ import { watchDebounced } from '@vueuse/core';
 import type { Address } from 'viem';
 import type { OutcomeInterface } from '~/lib/types/prediction-set';
 import { PredictionSetStatus, TransactionType } from '~/lib/types/prediction-set';
-import { useAccount } from '@wagmi/vue';
 
 const props = defineProps({
   contractAddress: { type: String, default: null, required: true },
@@ -253,11 +252,10 @@ const props = defineProps({
 const { getMaxTokensToSell, getMinTokensToBuy, addFunding, buy, sell } = useFixedMarketMaker();
 const { refreshCollateralBalance, getTokenStore } = useCollateralToken();
 const { getConditionalBalance, parseConditionalBalance } = useConditionalToken();
-const { resetContracts, ensureCorrectNetwork } = useContracts();
-const { isConnected } = useAccount();
 const message = useMessage();
 const txWait = useTxWait();
 const tokenStore = getTokenStore();
+const userStore = useUserStore();
 
 const selectedTab = ref(TransactionType.BUY);
 const isFundEnabled = ref(true);
@@ -361,8 +359,6 @@ async function fund() {
       return;
     }
 
-    await ensureCorrectNetwork();
-
     txWait.hash.value = await addFunding(props.contractAddress as Address, amount.value);
     await txWait.wait();
 
@@ -384,8 +380,6 @@ async function sellOutcome() {
     if (!amount.value) {
       return;
     }
-
-    await ensureCorrectNetwork();
 
     txWait.hash.value = await sell(
       props.contractAddress as Address,
@@ -414,8 +408,6 @@ async function buyOutcome() {
     if (!amount.value || !enoughCollateralBalance.value) {
       return;
     }
-
-    await ensureCorrectNetwork();
 
     txWait.hash.value = await buy(
       props.contractAddress as Address,

@@ -1,10 +1,8 @@
-import { useAccount } from '@wagmi/vue';
 import { maxUint256, type Address } from 'viem';
 import { ContractType } from '~/lib/config/contracts';
 
 export default function useCollateralToken() {
-  const { ensureCorrectNetwork, initContract } = useContracts();
-  const { address } = useAccount();
+  const { initContract } = useContracts();
   const txWait = useTxWait();
   const message = useMessage();
   const userStore = useUserStore();
@@ -19,9 +17,7 @@ export default function useCollateralToken() {
     const contract = await initContract(ContractType.COLLATERAL_TOKEN);
 
     try {
-      await ensureCorrectNetwork();
-
-      const allowance = await contract.read.allowance([address.value, fpmmContractAddress]);
+      const allowance = await contract.read.allowance([userStore.wallet.address, fpmmContractAddress]);
       if (allowance < maxUint256) {
         txWait.hash.value = await contract.write.approve([fpmmContractAddress, maxUint256]);
         const receipt = await txWait.wait();
@@ -43,7 +39,7 @@ export default function useCollateralToken() {
    */
   async function getCollateralBalance() {
     const contract = await initContract(ContractType.COLLATERAL_TOKEN);
-    return await contract.read.balanceOf([address.value]);
+    return await contract.read.balanceOf([userStore.wallet.address]);
   }
 
   /**
@@ -87,8 +83,6 @@ export default function useCollateralToken() {
   async function loadToken() {
     const tokenStore = getTokenStore();
     try {
-      await ensureCorrectNetwork();
-
       tokenStore.loading = true;
       tokenStore.balance = await getCollateralBalance();
       tokenStore.decimals = await getDecimals();

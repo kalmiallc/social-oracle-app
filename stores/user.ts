@@ -1,5 +1,5 @@
-import { useDisconnect } from '@wagmi/vue';
 import { defineStore } from 'pinia';
+import type { WalletClient } from 'viem';
 import Endpoints from '~/lib/values/endpoints';
 import { PARAMS_ALL_ITEMS, WebStorageKeys } from '~/lib/values/general.values';
 
@@ -22,25 +22,10 @@ export const useUserStore = defineStore('user', {
       loaded: false,
       loading: false,
     },
-
-    token: {
-      base: {
-        allowance: BigInt(0),
-        balance: BigInt(0),
-        symbol: '',
-      },
-      bsc: {
-        allowance: BigInt(0),
-        balance: BigInt(0),
-        symbol: '',
-      },
-      moonbeam: {
-        allowance: BigInt(0),
-        balance: BigInt(0),
-        symbol: '',
-      },
-    },
     user: {} as UserInterface,
+    wallet: {} as PrivyWallet,
+    walletClient: {} as WalletClient,
+    isConnected: false,
   }),
   getters: {
     loggedIn(state) {
@@ -55,9 +40,7 @@ export const useUserStore = defineStore('user', {
       try {
         this.$reset();
         $api.clearToken();
-
-        const { disconnect } = useDisconnect();
-        disconnect();
+        // TODO: Disconnect client
       } catch (e) {}
     },
 
@@ -67,6 +50,18 @@ export const useUserStore = defineStore('user', {
       if (userData.token) {
         this.setUserToken(userData.token);
       }
+    },
+
+    saveWallet(walletData: PrivyWallet) {
+      this.wallet = walletData;
+    },
+
+    setConnected(connected: boolean) {
+      this.isConnected = connected;
+    },
+
+    saveWalletClient(client: WalletClient) {
+      this.walletClient = client;
     },
 
     setUserToken(token: string) {

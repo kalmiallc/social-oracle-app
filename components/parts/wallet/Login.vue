@@ -9,7 +9,7 @@
 
   <!-- Modal - Wallet select -->
   <modal v-model:show="modalWalletSelectVisible" class="w-auto" :title="$t('wallet.info')">
-    <WalletEvm :loading="loadingWallet" />
+    <!-- TODO: PRIVY LOGIN -->
   </modal>
 </template>
 
@@ -24,11 +24,11 @@ const { t } = useI18n();
 const { $wagmiConfig } = useNuxtApp();
 const { error, success } = useMessage();
 const userStore = useUserStore();
-const { resetContracts, ensureCorrectNetwork } = useContracts();
+const { resetContracts } = useContracts();
 
 /** Evm wallet - wagmi */
 const { disconnect } = useDisconnect();
-const { address, isConnected } = useAccount();
+const { address } = useAccount();
 
 useAccountEffect({
   onConnect: data => evmWalletLogin(data),
@@ -38,14 +38,6 @@ const loadingWallet = ref<boolean>(false);
 const modalWalletSelectVisible = ref<boolean>(false);
 
 onBeforeMount(() => {
-  // if (!isConnected.value) {
-  //   try {
-  //     assetStore.$reset();
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // }
-
   if (!userStore.loggedIn) {
     disconnect();
     resetContracts();
@@ -84,13 +76,6 @@ async function evmWalletLogin(data: Record<string, any>) {
   }
 
   loadingWallet.value = true;
-
-  try {
-    await ensureCorrectNetwork();
-  } catch (error) {
-    console.log('Error while switching network: ');
-    console.log(error);
-  }
 
   try {
     const resMessage = await $api.get<WalletMessageResponse>(Endpoints.walletMessage);

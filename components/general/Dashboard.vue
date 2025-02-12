@@ -10,7 +10,7 @@
       class="tab-style"
     /> -->
 
-    <div v-if="loading">
+    <div v-if="loading || loadingInit">
       <transition name="fade" appear>
         <div v-if="loadingAnimation" class="w-full flex flex-col gap-2 h-screen">
           <div class="w-full flex flex-col gap-2 pt-4" :style="heightScreen">
@@ -60,6 +60,9 @@ const props = defineProps({
   loading: { type: Boolean, default: false },
 });
 
+const { isConnected, refreshData } = usePrivy();
+const userStore = useUserStore();
+
 /** Heading height */
 const headerRef = useTemplateRef('headerRef');
 
@@ -81,7 +84,21 @@ watch(
 
 /** Delay animation */
 const loadingAnimation = ref<boolean>(false);
-onMounted(() => {
+const loadingInit = ref(true);
+setLoadingAnimation(loadingInit.value);
+
+onMounted(async () => {
+  const connected = await isConnected();
+
+  if (!connected) {
+    userStore.logout();
+  } else {
+    userStore.setConnected(true);
+    await refreshData();
+    console.log(userStore.wallet.address);
+  }
+  loadingInit.value = false;
+
   setLoadingAnimation(props.loading);
 });
 

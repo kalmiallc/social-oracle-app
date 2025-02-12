@@ -4,6 +4,19 @@ export enum NotificationType {
   UNKNOWN = 0,
 }
 declare global {
+  interface PrivyWallet {
+    type: 'wallet';
+    address: string;
+    chain_type: 'ethereum';
+    verified_at: number;
+    first_verified_at: number | null;
+    latest_verified_at: number | null;
+    wallet_client: 'unknown';
+    chain_id?: string | undefined;
+    wallet_client_type?: string | undefined;
+    connector_type?: string | undefined;
+  }
+
   /**
    * User
    */
