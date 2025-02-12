@@ -22,10 +22,10 @@ export default defineNuxtPlugin(nuxtApp => {
         dappMetadata: {
           name: 'Social Oracle Metamask wallet',
           url: 'https://socialoracle.xyz',
-          iconUrl: '/favicon.png',
+          iconUrl: '/favicon.svg',
         },
       }),
-      coinbaseWallet({ appName: 'Social Oracle Coinbase wallet', appLogoUrl: '/favicon.png' }),
+      coinbaseWallet({ appName: 'Social Oracle Coinbase wallet', appLogoUrl: '/favicon.svg' }),
       walletConnect({ projectId: '' }),
     ],
     multiInjectedProviderDiscovery: false,
