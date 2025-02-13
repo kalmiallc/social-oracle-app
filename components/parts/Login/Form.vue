@@ -108,7 +108,7 @@ async function logIn() {
     try {
       console.log(otpCode.value);
       await privy.auth.email.loginWithCode(email.value, otpCode.value, 'login-or-sign-up', {
-        embedded: { ethereum: { createOnLogin: 'all-users' } },
+        embedded: { ethereum: { createOnLogin: 'users-without-wallets' } },
       });
     } catch (error) {
       console.log(error);
