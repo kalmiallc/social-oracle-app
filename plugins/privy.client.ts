@@ -4,6 +4,8 @@ import { LocalStorage } from '@privy-io/js-sdk-core';
 import Privy from '@privy-io/js-sdk-core';
 
 export default defineNuxtPlugin(nuxtApp => {
+  const config = useRuntimeConfig();
+
   if (import.meta.server) return;
 
   // Initialize the Privy client
@@ -34,16 +36,6 @@ export default defineNuxtPlugin(nuxtApp => {
       console.error('Failed to access iframe contentWindow');
     }
   };
-
-  // // Ensure contentWindow is available before calling setMessagePoster
-  // iframe.onload = () => {
-  //   if (iframe.contentWindow) {
-  //     privy.setMessagePoster(iframe.contentWindow as any);
-  //     console.log('Privy iframe communication setup completed');
-  //   } else {
-  //     console.error('Failed to access iframe contentWindow');
-  //   }
-  // };
 
   // Provide Privy globally
   nuxtApp.provide('privy', privy);

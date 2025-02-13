@@ -27,7 +27,8 @@
     "v-lazy-image": "^2.1.1",
     "viem": "^2.23.2",
     "vue-cookie-accept-decline": "^6.1.0",
-    "vue3-jazzicon": "^0.1.4"
+    "vue3-jazzicon": "^0.1.4",
+    "vue3-otp-input": "^0.5.21"
   },
   "devDependencies": {
     "@nuxtjs/date-fns": "^1.5.0",

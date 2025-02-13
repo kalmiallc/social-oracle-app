@@ -18,7 +18,6 @@
 
     <div class="flex">
       <div v-if="userStore.isConnected && userStore.loggedIn" class="flex-cc text-white">
-        <!-- <HeaderNotifications /> -->
         <HeaderProfile />
       </div>
       <WalletLogin v-else />

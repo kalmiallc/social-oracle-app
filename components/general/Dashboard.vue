@@ -90,7 +90,7 @@ setLoadingAnimation(loadingInit.value);
 onMounted(async () => {
   const connected = await isConnected();
 
-  if (!connected) {
+  if (!connected || !userStore.loggedIn) {
     userStore.logout();
   } else {
     userStore.setConnected(true);

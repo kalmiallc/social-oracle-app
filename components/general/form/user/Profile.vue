@@ -1,101 +1,44 @@
 <template>
-  <n-form ref="formRef" class="w-full max-w-lg" :model="formData" :rules="rules" @submit.prevent="handleSubmit">
-    <!--  Username -->
-    <n-form-item path="name" :label="'Username'" :label-props="{ for: 'username' }">
+  <n-form ref="formRef" class="w-full max-w-lg">
+    <n-form-item :label="'Wallet'">
       <n-input
-        v-model:value="formData.name"
-        :input-props="{ id: 'username' }"
-        :placeholder="'Username'"
-        :loading="loadingForm"
+        v-model:value="userStore.wallet.address"
+        :input-props="{ id: 'wallet' }"
+        :placeholder="'Wallet'"
+        :readonly="true"
+        :loading="loading"
       />
     </n-form-item>
 
-    <!--  Email -->
-    <n-form-item path="email" :label="'Email address'" :label-props="{ for: 'email' }">
+    <n-form-item path="email" :label="'Email address'">
       <n-input
-        v-model:value="formData.email"
+        v-model:value="email"
         :input-props="{ id: 'email', type: 'email' }"
-        :placeholder="$t('form.placeholder.email', { afna: '@' })"
-        :loading="loadingForm"
+        :readonly="true"
+        :loading="loading"
       />
-    </n-form-item>
-
-    <!--  Submit -->
-    <n-form-item :show-label="false">
-      <input type="submit" class="hidden" />
-      <BasicButton class="mt-2" size="large" type="primary" :loading="loading || loadingForm" @click="handleSubmit">
-        Save
-      </BasicButton>
     </n-form-item>
   </n-form>
 </template>
 
 <script lang="ts" setup>
-import type { FormInst, FormRules, FormValidationError } from 'naive-ui';
-import { ruleRequired } from '~/lib/misc/validation';
-import Endpoints from '~/lib/values/endpoints';
-
-type FormUserProfile = {
-  name: string;
-  email: string;
-};
-
-const message = useMessage();
-const { t } = useI18n();
 const userStore = useUserStore();
+const { privy } = usePrivy();
 
-const loading = ref<boolean>(false);
-const loadingForm = ref<boolean>(true);
-const formRef = ref<FormInst | null>(null);
-
-const formData = ref<FormUserProfile>({
-  name: userStore.name,
-  email: userStore.email,
-});
-
-const rules: FormRules = {
-  name: [],
-  email: [
-    {
-      type: 'email',
-      message: t('validation.email'),
-    },
-    ruleRequired(t('validation.emailRequired')),
-  ],
-};
+const email = ref('');
+const loading = ref(true);
 
 onMounted(async () => {
   await sleep(500);
-  await Promise.all(Object.values(userStore.promises));
 
-  formData.value.email = userStore.email;
-  loadingForm.value = false;
-});
+  const user = (await privy.user.get()).user;
+  console.log(user);
 
-// Submit
-function handleSubmit(e: Event | MouseEvent) {
-  e.preventDefault();
-  formRef.value?.validate(async (errors: Array<FormValidationError> | undefined) => {
-    if (errors) {
-      errors.map(fieldErrors => fieldErrors.map(error => message.warning(error.message || 'Error')));
-    } else {
-      await updateUserProfile();
-    }
-  });
-}
-async function updateUserProfile() {
-  loading.value = true;
-
-  try {
-    const res = await $api.patch<UserProfileResponse>(Endpoints.me, formData.value);
-
-    if (res.data) {
-      userStore.saveUser(res.data);
-      message.success(t('form.success.profile'));
-    }
-  } catch (error) {
-    message.error(apiError(error));
+  const userEmail = user?.linked_accounts.find(acc => acc.type === 'email');
+  if (userEmail) {
+    email.value = userEmail.address;
   }
+
   loading.value = false;
-}
+});
 </script>

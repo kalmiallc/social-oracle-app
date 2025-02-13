@@ -47,5 +47,7 @@ declare global {
     CONDITIONAL_TOKEN_CONTRACT: Address;
     FPMM_FACTORY_CONTRACT: Address;
     ORACLE_CONTRACT: Address;
+
+    PRIVY_APP_ID: string;
   }
 }

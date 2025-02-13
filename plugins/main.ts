@@ -3,6 +3,7 @@ import VueCookieAcceptDecline from 'vue-cookie-accept-decline';
 import Jazzicon from 'vue3-jazzicon/src/components';
 import { LS_KEYS } from '~/lib/values/general.values';
 import config from '../package.json';
+import VOtpInput from 'vue3-otp-input';
 
 export default defineNuxtPlugin(nuxtApp => {
   if (typeof window !== 'undefined') {
@@ -18,6 +19,9 @@ export default defineNuxtPlugin(nuxtApp => {
 
     /** Jazz icon */
     nuxtApp.vueApp.component('jazzicon', Jazzicon);
+
+    /** OTP form */
+    nuxtApp.vueApp.component('v-otp-input', VOtpInput);
   }
 });
 

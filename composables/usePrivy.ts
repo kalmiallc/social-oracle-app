@@ -7,6 +7,10 @@ export const usePrivy = () => {
   const { $privy } = useNuxtApp();
   const privy = $privy as Privy;
 
+  /**
+   * Checks if Privy is connected.
+   * @returns Boolean.
+   */
   async function isConnected(): Promise<boolean> {
     try {
       return !!(await privy.user.get())?.user?.id;
@@ -15,6 +19,9 @@ export const usePrivy = () => {
     }
   }
 
+  /**
+   * Refreshes Privy data - wallet and wallet client.
+   */
   async function refreshData() {
     try {
       let user = (await privy.user.get()).user;
