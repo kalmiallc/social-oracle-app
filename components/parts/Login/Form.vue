@@ -143,6 +143,8 @@ async function logIn() {
 
     message.success('Log in successful.');
   } catch (error) {
+    otpCode.value = '';
+
     message.error('Error while logging in. Please try again.');
     console.log(error);
   } finally {

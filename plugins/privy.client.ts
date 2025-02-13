@@ -10,7 +10,8 @@ export default defineNuxtPlugin(nuxtApp => {
 
   // Initialize the Privy client
   const privy = new Privy({
-    appId: 'cm727ky1m033zu15ipe6wx6tx',
+    appId: config.public.PRIVY_APP_ID,
+    clientId: config.public.PRIVY_CLIENT_ID,
     storage: new LocalStorage(),
   });
 
@@ -18,7 +19,7 @@ export default defineNuxtPlugin(nuxtApp => {
   const iframeUrl = privy.embeddedWallet.getURL(); // This is synchronous
   const iframe = document.createElement('iframe');
   iframe.src = iframeUrl;
-  // iframe.style.display = 'none'; // Hide iframe if needed
+  iframe.style.display = 'none'; // Hide iframe if needed
   document.body.appendChild(iframe);
 
   iframe.onload = () => {

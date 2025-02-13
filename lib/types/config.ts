@@ -49,5 +49,6 @@ declare global {
     ORACLE_CONTRACT: Address;
 
     PRIVY_APP_ID: string;
+    PRIVY_CLIENT_ID: string;
   }
 }
