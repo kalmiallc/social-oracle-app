@@ -19,8 +19,8 @@ export function getAppConfig(env?: string) {
 export function prepareOG(
   title = 'Social Oracle - A decentralized prediction market platform where users can bet on real world social events.',
   description = 'Social Oracle is a decentralized prediction market platform where users can bet on real world social events.',
-  image = 'https://app.socialoracle.xyz/og.png',
-  url = 'https://app.socialoracle.xyz/'
+  image = 'http://social-oracle-app-dev.s3-website-us-east-1.amazonaws.com/og.png',
+  url = 'http://social-oracle-app-dev.s3-website-us-east-1.amazonaws.com/'
 ) {
   return {
     title,

@@ -2,8 +2,8 @@ import packageConfig from '../../package.json';
 
 const config: ConfigInterface = {
   VERSION: packageConfig.version || '1.0.0',
-  url: 'https://app-dev.socialoracle.xyz/',
-  apiUrl: 'https://api-dev.socialoracle.xyz',
+  url: 'http://social-oracle-app-dev.s3-website-us-east-1.amazonaws.com/',
+  apiUrl: 'https://tjsziouuh3.execute-api.us-east-1.amazonaws.com/dev',
   CHAIN_ID: 84532,
   COLLATERAL_TOKEN_CONTRACT: '0x82AF954d52Bb42F5075c392323D983415fe68672',
   CONDITIONAL_TOKEN_CONTRACT: '0x2346Cfa50e396BeFC2242763eD15Ca0aab1E9a79',
