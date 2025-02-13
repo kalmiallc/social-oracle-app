@@ -23,7 +23,7 @@
         Please check <span class="font-bold">{{ email }}</span> for an email from privy.io and enter your code below.
       </div>
 
-      <div class="flex items-center justify-center mt-12">
+      <div class="flex items-center justify-center mt-12 w-full">
         <v-otp-input
           v-if="!loading"
           ref="otpInput"
@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div class="text-[12px] leading-[16px] mt-3">
+      <div class="text-[12px] leading-[16px] mt-3 pl-[5px]">
         Didn't get an email?
         <span class="underline text-primary hover:opacity-80 cursor-pointer" @click="sendEmail">Resend code</span>
       </div>
