@@ -1,5 +1,5 @@
 import Privy from '@privy-io/js-sdk-core';
-import { createWalletClient, custom, type Address } from 'viem';
+import { createWalletClient, custom, defineChain, type Address } from 'viem';
 import { baseSepolia } from 'viem/chains';
 
 export const usePrivy = () => {
@@ -33,16 +33,20 @@ export const usePrivy = () => {
 
       saveWallet(wallet);
 
+      const chain = getChain();
+      const chainIdHex = `0x${chain.id.toString(16).toUpperCase()}`;
+
       // Create provider.
       const provider = await privy.embeddedWallet.getProvider(wallet as any);
+
+      // Switch chain.
       await provider.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x14A34' }],
+        params: [{ chainId: chainIdHex }],
       });
 
-      privy.funding.coinbase.initOnRampSession;
       const viemWalletClient = createWalletClient({
-        chain: baseSepolia,
+        chain: chain,
         transport: custom(provider),
         account: wallet.address as Address,
       });

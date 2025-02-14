@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <div class="flex items-center justify-center w-full mt-16">
+    <div class="flex items-center justify-center w-full mt-16 cursor-pointer" @click="openPrivy">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 40" height="13" width="150">
         <g fill="#B14AB3">
           <path
@@ -81,6 +81,10 @@ watch(
     emit('loading', loading.value);
   }
 );
+
+async function openPrivy() {
+  window.open('https://www.privy.io/', '_blank');
+}
 
 async function sendEmail() {
   if (!email.value || loading.value) {

@@ -16,6 +16,7 @@
         :input-props="{ id: 'email', type: 'email' }"
         :readonly="true"
         :loading="loading"
+        :placeholder="'Email'"
       />
     </n-form-item>
   </n-form>

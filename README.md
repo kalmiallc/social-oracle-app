@@ -1,8 +1,8 @@
 # Social Oracle Application
 
-| Stage | Status                                                                                                                                                                                                                                                                                                                | URL                                                              |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| PROD  | ![Build dev](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiSWNlOGNWM2xpYXZ6SkZiZlBycEZSSmQyK2J0RFVKektnVUxhVG1uc3JaZzUxZHAzYTlLOU9sY2FwbmlIUEw0REVWN21LUXBkK3dKYUdlRjhCa09qMlFRPSIsIml2UGFyYW1ldGVyU3BlYyI6IjZ4SGJTZm5WcDVxNEZkelEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=develop) | http://social-oracle-app-dev.s3-website-us-east-1.amazonaws.com/ |
+| Stage | Status                                                                                                                                                                                                                                                                                                                | URL                                   |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| PROD  | ![Build dev](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiSWNlOGNWM2xpYXZ6SkZiZlBycEZSSmQyK2J0RFVKektnVUxhVG1uc3JaZzUxZHAzYTlLOU9sY2FwbmlIUEw0REVWN21LUXBkK3dKYUdlRjhCa09qMlFRPSIsIml2UGFyYW1ldGVyU3BlYyI6IjZ4SGJTZm5WcDVxNEZkelEiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=develop) | https://d1fq8e8mhf6u5t.cloudfront.net |
 
 This repository contains source code for the Social Oracle application frontend.
 

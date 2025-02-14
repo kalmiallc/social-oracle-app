@@ -1,4 +1,3 @@
-import { useClient } from '@wagmi/vue';
 import type { Address } from 'viem';
 import { getContract } from 'viem';
 import { ContractType, getContractAbi } from '~/lib/config/contracts';
@@ -7,7 +6,6 @@ const contracts = reactive<{ [key: string]: any }>({});
 
 export default function useContracts() {
   const config = useRuntimeConfig();
-  const publicClient = useClient();
   const userStore = useUserStore();
 
   /**
@@ -36,10 +34,7 @@ export default function useContracts() {
       contracts[address] = getContract({
         address,
         abi: getContractAbi(contractType),
-        client: {
-          wallet: userStore.walletClient,
-          public: publicClient.value,
-        },
+        client: userStore.walletClient,
       });
     }
 

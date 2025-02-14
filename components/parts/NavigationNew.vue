@@ -24,14 +24,16 @@ const menuOptions = [
     iconName: 'icon/fire',
   },
   {
-    label: 'Sports',
-    key: 'sports',
-    to: 'sports',
+    label: 'GitHub',
+    key: 'github',
+    to: 'github',
+    iconName: 'icon/github',
   },
   {
-    label: 'Business',
-    key: 'business',
-    to: 'business',
+    label: 'LinkedIn',
+    key: 'linkedin',
+    to: 'linkedin',
+    iconName: 'icon/linkedin',
   },
 ];
 

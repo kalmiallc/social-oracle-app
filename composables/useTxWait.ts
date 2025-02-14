@@ -1,4 +1,4 @@
-import { useChainId, useWaitForTransactionReceipt } from '@wagmi/vue';
+import { useWaitForTransactionReceipt } from '@wagmi/vue';
 import type { Address } from 'viem';
 
 /**
@@ -9,10 +9,10 @@ import type { Address } from 'viem';
  */
 export default function useTxWait() {
   const hash = ref<Address | undefined>(undefined);
-  const chainId = useChainId();
+  const chain = getChain();
 
   const { data, refetch } = useWaitForTransactionReceipt({
-    chainId: chainId.value,
+    chainId: chain.id,
     confirmations: 3,
     hash,
   });

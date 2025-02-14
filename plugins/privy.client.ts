@@ -8,11 +8,14 @@ export default defineNuxtPlugin(nuxtApp => {
 
   if (import.meta.server) return;
 
+  const chain = getChain();
+
   // Initialize the Privy client
   const privy = new Privy({
     appId: config.public.PRIVY_APP_ID,
     clientId: config.public.PRIVY_CLIENT_ID,
     storage: new LocalStorage(),
+    supportedChains: [chain],
   });
 
   // Create and append the iframe
