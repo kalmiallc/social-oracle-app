@@ -108,7 +108,10 @@
         >
           <div class="flex border-r-[0.5px] border-r-grey-lighter pr-11 items-center">
             <div class="text-white/80">Contract</div>
-            <div class="ml-auto font-bold hover:text-primary cursor-pointer">
+            <div
+              class="ml-auto font-bold hover:text-primary cursor-pointer"
+              @click="openExplorer(predictionSet.chainData.contractAddress)"
+            >
               {{ shortenAddress(predictionSet.chainData.contractAddress) }}
             </div>
             <NuxtIcon
@@ -120,7 +123,10 @@
 
           <div class="flex border-l-[0.5px] border-l-grey-lighter pl-11 items-center">
             <div class="text-white/80">Resolver</div>
-            <div class="ml-auto font-bol hover:text-primary cursor-pointer">
+            <div
+              class="ml-auto font-bol hover:text-primary cursor-pointer"
+              @click="openExplorer(config.public.ORACLE_CONTRACT)"
+            >
               {{ shortenAddress(config.public.ORACLE_CONTRACT) }}
             </div>
             <NuxtIcon
@@ -226,5 +232,11 @@ async function getPredictionSet(silent: boolean = false) {
   } finally {
     loading.value = false;
   }
+}
+
+async function openExplorer(address: string) {
+  const explorer = getChain().blockExplorers.default.url;
+
+  window.open(`${explorer}/${address}`, '_blank');
 }
 </script>
