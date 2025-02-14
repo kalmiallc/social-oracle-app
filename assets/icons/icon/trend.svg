@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500" height="500" viewBox="0 0 500 500"
+  xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle (Base Coin) -->
+  <circle cx="250" cy="250" r="200" fill="url(#coinGradient)" stroke="#8A3A8D" stroke-width="12"/>
+
+  <!-- Inner Decorative Ring -->
+  <circle cx="250" cy="250" r="180" fill="none" stroke="#D88ADC" stroke-width="8" stroke-dasharray="12,6"/>
+
+  <!-- Outer Shine (Subtle light reflection) -->
+  <circle cx="250" cy="250" r="195" fill="none" stroke="rgba(255, 255, 255, 0.3)" stroke-width="6"/>
+
+  <!-- Coin Edge Detailing (Lines along the coin edge) -->
+  <circle cx="250" cy="250" r="195" fill="none" stroke="#C56AC6" stroke-width="4" stroke-dasharray="6,3"/>
+
+  <!-- Subtle Coin Engravings (Accents for texture) -->
+  <g fill="#C56AC6">
+    <circle cx="250" cy="70" r="5"/>
+    <circle cx="250" cy="430" r="5"/>
+    <circle cx="70" cy="250" r="5"/>
+    <circle cx="430" cy="250" r="5"/>
+    <circle cx="150" cy="150" r="5"/>
+    <circle cx="350" cy="350" r="5"/>
+    <circle cx="350" cy="150" r="5"/>
+    <circle cx="150" cy="350" r="5"/>
+  </g>
+
+  <!-- Main Text -->
+  <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="90" fill="white" font-weight="bold" text-anchor="middle" alignment-baseline="middle">
+        TREND
+  </text>
+
+  <!-- Gradient Definition -->
+  <defs>
+    <radialGradient id="coinGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#D88ADC; stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#B14AB3; stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#8A3A8D; stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+</svg>
