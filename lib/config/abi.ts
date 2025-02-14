@@ -979,7 +979,7 @@ export const ORACLE_ABI = [
     inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
     name: 'question',
     outputs: [
-      { internalType: 'enum IgniteOracle.Status', name: 'status', type: 'uint8' },
+      { internalType: 'enum SocialOracle.Status', name: 'status', type: 'uint8' },
       { internalType: 'bool', name: 'automatic', type: 'bool' },
       { internalType: 'uint256', name: 'outcomeSlotCount', type: 'uint256' },
       { internalType: 'uint256', name: 'apiSources', type: 'uint256' },
