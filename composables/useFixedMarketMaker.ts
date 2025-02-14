@@ -137,6 +137,10 @@ export default function useFixedMarketMaker() {
    * @returns Funding balance.
    */
   async function getFundingBalance(fpmmContractAddress: Address) {
+    if (!userStore.wallet.address) {
+      return;
+    }
+
     const contract = await initContract(ContractType.FPMM, fpmmContractAddress);
     return await contract.read.balanceOf([userStore.wallet.address]);
   }

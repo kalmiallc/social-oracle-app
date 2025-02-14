@@ -14,6 +14,10 @@ export default function useCollateralToken() {
    * @returns Boolean.
    */
   async function checkCollateralAllowance(fpmmContractAddress: Address): Promise<boolean> {
+    if (!userStore.wallet.address || !userStore.walletClient.account) {
+      return false;
+    }
+
     const contract = await initContract(ContractType.COLLATERAL_TOKEN);
 
     try {
@@ -38,6 +42,10 @@ export default function useCollateralToken() {
    * @returns Collateral token balance.
    */
   async function getCollateralBalance() {
+    if (!userStore.wallet.address || !userStore.walletClient.account) {
+      return;
+    }
+
     const contract = await initContract(ContractType.COLLATERAL_TOKEN);
     return await contract.read.balanceOf([userStore.wallet.address]);
   }
@@ -48,6 +56,10 @@ export default function useCollateralToken() {
    * @returns Collateral token symbol.
    */
   async function getSymbol(): Promise<string> {
+    if (!userStore.wallet.address || !userStore.walletClient.account) {
+      return '';
+    }
+
     const contract = await initContract(ContractType.COLLATERAL_TOKEN);
 
     return await contract.read.symbol([]);
@@ -59,6 +71,10 @@ export default function useCollateralToken() {
    * @returns Collateral token decimals.
    */
   async function getDecimals(): Promise<number> {
+    if (!userStore.wallet.address || !userStore.walletClient.account) {
+      return 0;
+    }
+
     const contract = await initContract(ContractType.COLLATERAL_TOKEN);
 
     return await contract.read.decimals([]);

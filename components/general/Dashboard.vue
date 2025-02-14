@@ -95,7 +95,6 @@ onMounted(async () => {
   } else {
     userStore.setConnected(true);
     await refreshData();
-    console.log(userStore.wallet.address);
   }
   loadingInit.value = false;
 

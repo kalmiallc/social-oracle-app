@@ -19,11 +19,9 @@ export default function useContracts() {
       throw new Error('FPMM contract address must be provided!');
     }
 
-    if (!userStore.walletClient) {
+    if (!userStore.walletClient.account) {
       throw new Error('Wallet client not available!');
     }
-
-    console.log(userStore.walletClient);
 
     const address = contractAddress || getContractAddress(contractType);
     if (!address) {

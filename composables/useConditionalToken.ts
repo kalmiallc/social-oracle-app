@@ -16,6 +16,10 @@ export default function useConditionalToken() {
    * @returns Boolean.
    */
   async function checkConditionalApprove(fpmmContractAddress: Address): Promise<boolean> {
+    if (!userStore.wallet.address) {
+      return false;
+    }
+
     const contract = await initContract(ContractType.CONDITIONAL_TOKEN);
 
     try {
@@ -41,6 +45,10 @@ export default function useConditionalToken() {
    * @returns Conditional tokens balance.
    */
   async function getConditionalBalance(outcomePositionId: string) {
+    if (!userStore.wallet.address) {
+      return;
+    }
+
     const contract = await initContract(ContractType.CONDITIONAL_TOKEN);
 
     return await contract.read.balanceOf([userStore.wallet.address, outcomePositionId]);
