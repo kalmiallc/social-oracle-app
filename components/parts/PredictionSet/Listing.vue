@@ -9,7 +9,7 @@ import { useInfiniteScroll } from '@vueuse/core';
 import Endpoints from '~/lib/values/endpoints';
 
 const props = defineProps({
-  category: { type: String, default: '' },
+  tag: { type: String, default: '' },
 });
 
 const message = useMessage();
@@ -43,13 +43,18 @@ const {} = useInfiniteScroll(
 async function getPredictionSets() {
   loading.value = true;
   try {
-    const res = await $api.get<any>(Endpoints.predictionSets, {
-      category: props.category,
+    const query = {
       orderBy: 'id',
       limit: limit.value,
       desc: 'true',
       page: page.value,
-    });
+    };
+
+    if (props.tag) {
+      query['tag'] = props.tag;
+    }
+
+    const res = await $api.get<any>(Endpoints.predictionSets, query);
 
     if (res.data) {
       predictionSets.value.push(...(res.data.items as any[]));

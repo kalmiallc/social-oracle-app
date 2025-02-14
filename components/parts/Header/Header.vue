@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-bc w-full bg-grey px-6">
+  <div class="flex-bc w-full bg-grey px-6 h-[86px]">
     <div class="mt-2">
       <Logo class="inline-block" />
     </div>

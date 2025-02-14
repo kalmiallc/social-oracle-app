@@ -1,5 +1,5 @@
 <template>
   <Dashboard>
-    <PredictionSetListing :category="'top'"></PredictionSetListing>
+    <PredictionSetListing :tag="'github'"></PredictionSetListing>
   </Dashboard>
 </template>
