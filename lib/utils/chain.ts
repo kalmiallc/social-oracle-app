@@ -4,8 +4,6 @@ import { baseSepolia } from 'viem/chains';
 export function getChain() {
   const config = useRuntimeConfig();
 
-  return baseSepolia;
-
   if (['local', 'development', 'staging'].includes(config.public.ENV)) {
     return defineChain({
       id: 123420111,
