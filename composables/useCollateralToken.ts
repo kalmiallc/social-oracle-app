@@ -43,7 +43,7 @@ export default function useCollateralToken() {
    */
   async function getCollateralBalance() {
     if (!userStore.wallet.address || !userStore.walletClient.account) {
-      return;
+      return BigInt(0);
     }
 
     const contract = await initContract(ContractType.COLLATERAL_TOKEN);
@@ -56,10 +56,6 @@ export default function useCollateralToken() {
    * @returns Collateral token symbol.
    */
   async function getSymbol(): Promise<string> {
-    if (!userStore.wallet.address || !userStore.walletClient.account) {
-      return '';
-    }
-
     const contract = await initContract(ContractType.COLLATERAL_TOKEN);
 
     return await contract.read.symbol([]);
@@ -71,10 +67,6 @@ export default function useCollateralToken() {
    * @returns Collateral token decimals.
    */
   async function getDecimals(): Promise<number> {
-    if (!userStore.wallet.address || !userStore.walletClient.account) {
-      return 0;
-    }
-
     const contract = await initContract(ContractType.COLLATERAL_TOKEN);
 
     return await contract.read.decimals([]);
@@ -144,6 +136,22 @@ export default function useCollateralToken() {
     return userStore.collateralToken;
   }
 
+  /**
+   * Mints new collateral tokens.
+   * @param amount Amount to mint.
+   */
+  async function faucetMint(amount: number) {
+    if (!userStore.wallet.address || !userStore.walletClient.account) {
+      return null;
+    }
+
+    const tokenStore = getTokenStore();
+    const scaledAmount = BigInt(Math.round(amount * 10 ** tokenStore.decimals));
+    const contract = await initContract(ContractType.COLLATERAL_TOKEN);
+
+    return await contract.write.faucetMint([userStore.wallet.address, scaledAmount]);
+  }
+
   return {
     getTokenStore,
     checkCollateralAllowance,
@@ -152,5 +160,6 @@ export default function useCollateralToken() {
     refreshCollateralBalance,
     loadToken,
     parseBalance,
+    faucetMint,
   };
 }

@@ -46,9 +46,8 @@ export default function useConditionalToken() {
    */
   async function getConditionalBalance(outcomePositionId: string) {
     if (!userStore.wallet.address) {
-      return;
+      return BigInt(0);
     }
-
     const contract = await initContract(ContractType.CONDITIONAL_TOKEN);
 
     return await contract.read.balanceOf([userStore.wallet.address, outcomePositionId]);

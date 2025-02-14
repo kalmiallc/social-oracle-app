@@ -1,3 +1,4 @@
+import { useClient } from '@wagmi/vue';
 import type { Address } from 'viem';
 import { getContract } from 'viem';
 import { ContractType, getContractAbi } from '~/lib/config/contracts';
@@ -6,6 +7,7 @@ const contracts = reactive<{ [key: string]: any }>({});
 
 export default function useContracts() {
   const config = useRuntimeConfig();
+  const publicClient = useClient();
   const userStore = useUserStore();
 
   /**
@@ -19,9 +21,9 @@ export default function useContracts() {
       throw new Error('FPMM contract address must be provided!');
     }
 
-    if (!userStore.walletClient.account) {
-      throw new Error('Wallet client not available!');
-    }
+    // if (!userStore.walletClient) {
+    //   throw new Error('Wallet client not available!');
+    // }
 
     const address = contractAddress || getContractAddress(contractType);
     if (!address) {
@@ -32,7 +34,10 @@ export default function useContracts() {
       contracts[address] = getContract({
         address,
         abi: getContractAbi(contractType),
-        client: userStore.walletClient,
+        client: {
+          wallet: userStore.walletClient,
+          public: publicClient.value,
+        },
       });
     }
 

@@ -85,6 +85,10 @@
         their insights while staying ahead of the curve in the ever-changing landscape of social dynamics.
       </div>
 
+      <div class="text-[14px] leading-[16px] font-extralight text-center mt-4">
+        To receive $TREND token you will need some Sepolia Ether to cover your gas fees.
+      </div>
+
       <n-input-number
         placeholder="0"
         min="0"
@@ -114,16 +118,40 @@
         </template>
       </n-input-number>
 
-      <BasicButton class="w-full mt-3" size="large" :loading="loading">FUND</BasicButton>
+      <BasicButton class="w-full mt-3" size="large" :loading="loading" @click="fund">FUND</BasicButton>
     </div>
   </modal>
 </template>
 
 <script setup lang="ts">
+const { refreshCollateralBalance, faucetMint } = useCollateralToken();
+const txWait = useTxWait();
+const message = useMessage();
 const userStore = useUserStore();
 
 const loading = ref(false);
 const showFundModal = ref(false);
+const amount = ref('');
 
-const amount = ref(0);
+async function fund() {
+  loading.value = true;
+  try {
+    if (!amount.value) {
+      return;
+    }
+
+    txWait.hash.value = await faucetMint(Number(amount.value));
+    await txWait.wait();
+
+    message.success(`Successfully minted ${amount.value} $TREND.`);
+
+    amount.value = '' as any;
+    await refreshCollateralBalance();
+  } catch (error) {
+    console.error(error);
+    message.error(contractError(error));
+  } finally {
+    loading.value = false;
+  }
+}
 </script>

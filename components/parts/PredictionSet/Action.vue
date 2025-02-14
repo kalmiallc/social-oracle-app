@@ -44,7 +44,7 @@
               <div class="font-bold">Amount</div>
               <div class="ml-auto flex font-medium">
                 <div class="text-grey-lightest">Balance:</div>
-                <div class="text-white/80 ml-1">{{ tokenStore.parsedBalance }} USDC</div>
+                <div class="text-white/80 ml-1">{{ tokenStore.parsedBalance }} {{ tokenStore.symbol }}</div>
               </div>
             </div>
 
@@ -93,7 +93,7 @@
             <div class="flex items-center justify-center">
               <div>Avg price</div>
               <div class="ml-auto text-primary">
-                {{ outcome.latestChance.chance ? outcome.latestChance.chance.toFixed(3) : 0.0 }} USDC
+                {{ outcome.latestChance.chance ? outcome.latestChance.chance.toFixed(3) : 0.0 }} {{ tokenStore.symbol }}
               </div>
             </div>
             <div class="flex items-center justify-center mt-2">
@@ -102,7 +102,7 @@
             </div>
             <div class="flex items-center justify-center mt-2">
               <div>Potential return</div>
-              <div class="ml-auto text-statusGreen">1.273662 USDC</div>
+              <div class="ml-auto text-statusGreen">1.273662 {{ tokenStore.symbol }}</div>
             </div>
           </div>
         </n-tab-pane>
@@ -168,12 +168,12 @@
             <div class="flex items-center justify-center">
               <div>Avg price</div>
               <div class="ml-auto text-primary">
-                {{ outcome.latestChance.chance ? outcome.latestChance.chance.toFixed(3) : 0.0 }} USDC
+                {{ outcome.latestChance.chance ? outcome.latestChance.chance.toFixed(3) : 0.0 }} {{ tokenStore.symbol }}
               </div>
             </div>
             <div class="flex items-center justify-center mt-2">
               <div>Potential return</div>
-              <div class="ml-auto text-statusGreen">1.273662 USDC</div>
+              <div class="ml-auto text-statusGreen">1.273662 {{ tokenStore.symbol }}</div>
             </div>
           </div>
         </n-tab-pane>
@@ -185,7 +185,7 @@
               <div class="font-bold">Amount</div>
               <div class="ml-auto flex font-medium">
                 <div class="text-grey-lightest">Balance:</div>
-                <div class="text-white/80 ml-1">{{ tokenStore.parsedBalance }} USDC</div>
+                <div class="text-white/80 ml-1">{{ tokenStore.parsedBalance }} {{ tokenStore.symbol }}</div>
               </div>
             </div>
 
