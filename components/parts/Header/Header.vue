@@ -18,7 +18,10 @@
 
     <div class="flex">
       <div v-if="userStore.isConnected && userStore.loggedIn" class="flex-cc text-white">
+        <BasicButton size="large" class="mr-4" @click="openFaucet">Faucet</BasicButton>
+
         <BasicButton size="large" class="mr-4" @click="showFundModal = true">Fund</BasicButton>
+
         <HeaderProfile />
       </div>
       <WalletLogin v-else />
@@ -85,14 +88,17 @@
         their insights while staying ahead of the curve in the ever-changing landscape of social dynamics.
       </div>
 
-      <div class="text-[14px] leading-[16px] font-extralight text-center mt-4">
+      <div
+        class="text-[14px] leading-[16px] font-extralight text-center mt-4 hover:text-primary-light cursor-pointer"
+        @click="openFaucet"
+      >
         To receive $TREND token you will need some Sepolia Ether to cover your gas fees.
       </div>
 
       <n-input-number
         placeholder="0"
         min="0"
-        v-model:value="amount"
+        v-model:value="amount as any"
         size="large"
         class="min-w-full text-center mt-6"
         type="number"
@@ -153,5 +159,9 @@ async function fund() {
   } finally {
     loading.value = false;
   }
+}
+
+async function openFaucet() {
+  window.open('https://bridge.gelato.network/bridge/opcelestia-raspberry', '_blank');
 }
 </script>
