@@ -63,6 +63,8 @@
 import Endpoints from '~/lib/values/endpoints';
 
 const { privy, refreshData } = usePrivy();
+const { refreshCollateralBalance } = useCollateralToken();
+
 const userStore = useUserStore();
 const message = useMessage();
 
@@ -146,6 +148,12 @@ async function logIn() {
     userStore.setConnected(true);
 
     message.success('Log in successful.');
+
+    try {
+      await refreshCollateralBalance();
+    } catch (error) {
+      console.log(error);
+    }
   } catch (error) {
     otpCode.value = '';
 

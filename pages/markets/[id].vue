@@ -5,10 +5,7 @@
         <!-- HEADER -->
         <div class="flex">
           <div class="w-[80px] h-[80px] flex-shrink-0">
-            <img
-              class="rounded-[8px] w-full h-full object-cover"
-              src="https://s3-alpha-sig.figma.com/img/a21f/779d/2c0931626f7c395eb6d83153a833f8ea?Expires=1739750400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mGfPGCxcLctO2MjpQ9yHbPzUhvDKiJFQ0ErmAlBuiWaEk6FaSRYX9Xpyjl5IdWzZFFh78DQM07GesQA~qVlI88J7nhuOgF-CebWhNIZHKRYT1JhDhfip9VjM85Uk3W8uomvwydyj~Oef2nt8asqEqjxdPLaD7c9Ab01AfE4a8ygRqzmVf5A-IB8984h3cKlRORBngKXeRU3uMnx88UoL-5wasTjnGFZ5HpJqDzPUQTOLVzzN40A0YOeqhH~Byk0rtQTui1Yz9OKxrr~tgK7VRDJ4r5-ApHQiA3RcrhED-E7KGr14Ye34lP4zcp9aOWyG5ory399LBcZRZT8HmuRHfQ__"
-            />
+            <img class="rounded-[8px] w-full h-full object-cover" :src="predictionSet.imgUrl" />
           </div>
           <div class="flex flex-col ml-8">
             <div class="text-[24px] leading-[34px] font-bold text-white mt-[5px]">
@@ -40,10 +37,7 @@
           >
             <div class="flex">
               <div class="w-[56px] h-[56px] flex-shrink-0">
-                <img
-                  class="rounded-[78px] w-full h-full object-cover"
-                  src="https://s3-alpha-sig.figma.com/img/a21f/779d/2c0931626f7c395eb6d83153a833f8ea?Expires=1739750400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mGfPGCxcLctO2MjpQ9yHbPzUhvDKiJFQ0ErmAlBuiWaEk6FaSRYX9Xpyjl5IdWzZFFh78DQM07GesQA~qVlI88J7nhuOgF-CebWhNIZHKRYT1JhDhfip9VjM85Uk3W8uomvwydyj~Oef2nt8asqEqjxdPLaD7c9Ab01AfE4a8ygRqzmVf5A-IB8984h3cKlRORBngKXeRU3uMnx88UoL-5wasTjnGFZ5HpJqDzPUQTOLVzzN40A0YOeqhH~Byk0rtQTui1Yz9OKxrr~tgK7VRDJ4r5-ApHQiA3RcrhED-E7KGr14Ye34lP4zcp9aOWyG5ory399LBcZRZT8HmuRHfQ__"
-                />
+                <img class="rounded-[78px] w-full h-full object-cover" :src="outcome.imgUrl" />
               </div>
 
               <div class="flex flex-col ml-4">
@@ -237,6 +231,6 @@ async function getPredictionSet(silent: boolean = false) {
 async function openExplorer(address: string) {
   const explorer = getChain().blockExplorers.default.url;
 
-  window.open(`${explorer}/${address}`, '_blank');
+  window.open(`${explorer}/address/${address}`, '_blank');
 }
 </script>

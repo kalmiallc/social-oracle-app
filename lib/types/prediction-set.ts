@@ -49,6 +49,7 @@ export interface PredictionSetInterface extends GeneralInterface {
   setStatus: PredictionSetStatus;
   outcomes: OutcomeInterface[];
   chainData: ChainDataInterface;
+  imgUrl: string;
 }
 
 export interface OutcomeInterface extends GeneralInterface {
@@ -56,6 +57,7 @@ export interface OutcomeInterface extends GeneralInterface {
   positionId: string;
   name: string;
   latestChance: OutcomeChance;
+  imgUrl: string;
 }
 
 export interface ChainDataInterface extends GeneralInterface {

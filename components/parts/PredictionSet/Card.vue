@@ -5,10 +5,7 @@
   >
     <div class="flex border-b border-white/10 pb-3 cursor-pointer" @click="openDetails()">
       <div class="w-[38px] h-[38px] flex-shrink-0">
-        <img
-          class="rounded-[8px] w-full h-full object-cover"
-          src="https://s3-alpha-sig.figma.com/img/a21f/779d/2c0931626f7c395eb6d83153a833f8ea?Expires=1739750400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=mGfPGCxcLctO2MjpQ9yHbPzUhvDKiJFQ0ErmAlBuiWaEk6FaSRYX9Xpyjl5IdWzZFFh78DQM07GesQA~qVlI88J7nhuOgF-CebWhNIZHKRYT1JhDhfip9VjM85Uk3W8uomvwydyj~Oef2nt8asqEqjxdPLaD7c9Ab01AfE4a8ygRqzmVf5A-IB8984h3cKlRORBngKXeRU3uMnx88UoL-5wasTjnGFZ5HpJqDzPUQTOLVzzN40A0YOeqhH~Byk0rtQTui1Yz9OKxrr~tgK7VRDJ4r5-ApHQiA3RcrhED-E7KGr14Ye34lP4zcp9aOWyG5ory399LBcZRZT8HmuRHfQ__"
-        />
+        <img class="rounded-[8px] w-full h-full object-cover" :src="predictionSet.imgUrl" />
       </div>
       <div class="ml-4 text-[14px] leading-[20px] font-medium">
         {{ predictionSet.question }}

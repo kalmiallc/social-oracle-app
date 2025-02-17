@@ -10,17 +10,12 @@
       </div>
       <div v-else class="bg-grey-light rounded-[8px] p-3 flex flex-row items-center justify-center">
         <div class="w-[30px] h-[30px] flex-shrink-0">
-          <img
-            class="rounded-[48px] w-full h-full object-cover"
-            src="https://s3-alpha-sig.figma.com/img/99a4/f1e2/82e026f7f9103144567086cf6cd6a662?Expires=1739750400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=X~LM1-8x2K~GS-WxTXco4sGom-IufMECvaatFC8NWpNF36plKwoS2GWG-ONIx4DYF0FaaiLk0avNaWu593gzQWGan2SISOHnwzD1OFljZForFAebXzMFFkLPw7zRXOAj6C5F38rvn7hCASSLNtnaupzkJlwyocPQzzHBx35iULp9DGfuV2jChQvZIhCeqRbqdheJu~r16qKI9TslaML0SAuaZOsPe-GxfdNTl81pghUkpVxyktSzkaaoqLEoJ0pOtVDu-HaUIw9rvcWDsb0JGP~Ed6AJyWjneQteo3W4tu0G4APnxed3bNpX55mp4tM~AdnH0vVNVTNCxjeWL4vBTg__"
-          />
+          <img class="rounded-[48px] w-full h-full object-cover" :src="outcome.imgUrl" />
         </div>
         <div class="ml-2 text-[12px] leading-[16px] font-bold">{{ outcome.name }}</div>
         <div class="text-[12px] leading-[16px] font-bold ml-auto">
           {{ outcome.latestChance.chance ? (outcome.latestChance.chance * 100).toFixed(0) : 0.0 }} %
         </div>
-        <NuxtIcon class="ml-3 opacity-[24%] text-white" name="icon/refresh" />
-        <NuxtIcon class="ml-3 text-white" name="icon/settings" />
       </div>
     </template>
     <div class="tabs-wrapper">
@@ -233,6 +228,33 @@
       </n-tabs>
     </div>
   </n-card>
+
+  <modal v-model:show="showSuccessModal" class="w-[320px] border-none">
+    <div class="flex flex-col">
+      <div class="flex w-full items-center justify-center mb-2">
+        <NuxtIcon name="icon/check" class="text-primary text-[40px]"></NuxtIcon>
+      </div>
+      <div class="flex items-center justify-center text-[14px] leading-[20px] font-bold">Success!</div>
+
+      <div class="flex flex-col items-center justify-center mt-5">
+        <div class="text-center" v-if="selectedTab === TransactionType.FUND">
+          You have successfully funded this market.
+        </div>
+        <div v-else class="flex flex-col items-center justify-center text-center">
+          <div>You have successfully {{ selectedTab === TransactionType.BUY ? 'bought' : 'sold' }} outcome:</div>
+          <div class="my-4 uppercase font-extrabold text-[18px]">{{ outcome.name }}</div>
+        </div>
+      </div>
+
+      <BasicButton
+        v-if="transactionHash"
+        @click="openExplorer(transactionHash)"
+        class="w-full font-bold mt-5"
+        :size="'large'"
+        >Transaction</BasicButton
+      >
+    </div>
+  </modal>
 </template>
 
 <script setup lang="ts">
@@ -264,6 +286,9 @@ const loading = ref(false);
 const amount = ref<number>();
 const returnAmount = ref<string>('0.0');
 const conditionalBalance = ref(BigInt(0));
+
+const showSuccessModal = ref(false);
+const transactionHash = ref('');
 
 const enoughConditionalBalance = computed(() => {
   const scaledAmount = BigInt(Math.round((amount.value || 0) * 10 ** tokenStore.decimals));
@@ -351,6 +376,7 @@ async function updateSellAmount() {
 }
 
 async function fund() {
+  transactionHash.value = '';
   loading.value = true;
   try {
     await refreshCollateralBalance();
@@ -360,7 +386,10 @@ async function fund() {
     }
 
     txWait.hash.value = await addFunding(props.contractAddress as Address, amount.value);
-    await txWait.wait();
+    const receipt = await txWait.wait();
+
+    showSuccessModal.value = true;
+    transactionHash.value = receipt?.data?.transactionHash || '';
 
     amount.value = '' as any;
     await refreshCollateralBalance();
@@ -373,6 +402,7 @@ async function fund() {
 }
 
 async function sellOutcome() {
+  transactionHash.value = '';
   loading.value = true;
   try {
     await refreshCollateralBalance();
@@ -388,7 +418,10 @@ async function sellOutcome() {
       slippage.value,
       props.outcome.latestChance.chance
     );
-    await txWait.wait();
+    const receipt = await txWait.wait();
+
+    showSuccessModal.value = true;
+    transactionHash.value = receipt?.data?.transactionHash || '';
 
     amount.value = '' as any;
     await refreshCollateralBalance();
@@ -401,6 +434,7 @@ async function sellOutcome() {
 }
 
 async function buyOutcome() {
+  transactionHash.value = '';
   loading.value = true;
   try {
     await refreshCollateralBalance();
@@ -415,7 +449,10 @@ async function buyOutcome() {
       props.outcome.outcomeIndex,
       slippage.value
     );
-    await txWait.wait();
+    const receipt = await txWait.wait();
+
+    showSuccessModal.value = true;
+    transactionHash.value = receipt?.data?.transactionHash || '';
 
     amount.value = '' as any;
     await refreshCollateralBalance();
@@ -425,6 +462,12 @@ async function buyOutcome() {
   } finally {
     loading.value = false;
   }
+}
+
+async function openExplorer(txHash: string) {
+  const explorer = getChain().blockExplorers.default.url;
+
+  window.open(`${explorer}/tx/${txHash}`, '_blank');
 }
 </script>
 
