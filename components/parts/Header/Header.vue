@@ -98,7 +98,7 @@
       <n-input-number
         placeholder="0"
         min="0"
-        v-model:value="amount as any"
+        v-model:value="amount"
         size="large"
         class="min-w-full text-center mt-6"
         type="number"
@@ -137,7 +137,7 @@ const userStore = useUserStore();
 
 const loading = ref(false);
 const showFundModal = ref(false);
-const amount = ref('');
+const amount = ref<any>('');
 
 async function fund() {
   loading.value = true;
