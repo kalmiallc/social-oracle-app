@@ -15,6 +15,9 @@
       />
 
       <BasicButton class="w-full mt-3" size="large" :loading="loading" @click="sendEmail">Submit</BasicButton>
+      <BasicButton class="w-full mt-3" size="large" :loading="loading" @click="openGitHub">
+        <div class="flex items-center gap-2"><NuxtIcon name="icon/github" />Github</div>
+      </BasicButton>
     </div>
 
     <div v-if="step === 2">
@@ -61,6 +64,7 @@
 
 <script lang="ts" setup>
 import Endpoints from '~/lib/values/endpoints';
+import { removeLastSlash } from '../../../lib/misc/strings';
 
 const { privy, refreshData } = usePrivy();
 const { refreshCollateralBalance } = useCollateralToken();
@@ -86,6 +90,19 @@ watch(
 
 async function openPrivy() {
   window.open('https://www.privy.io/', '_blank');
+}
+
+async function openGitHub() {
+  const config = useRuntimeConfig();
+  try {
+    const { url } = await privy.auth.oauth.generateURL(
+      'github',
+      removeLastSlash(getAppConfig(config.public.ENV).url) + '/github-login'
+    );
+    window.location.assign(url);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function sendEmail() {
