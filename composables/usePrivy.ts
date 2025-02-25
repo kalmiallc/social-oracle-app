@@ -65,6 +65,7 @@ export const usePrivy = () => {
         removeLastSlash(getAppConfig(config.public.ENV).url) + '/github-login'
       );
       console.log(url);
+      await sleep(10000);
       window.location.assign(url);
     } catch (error) {
       console.error(error);
