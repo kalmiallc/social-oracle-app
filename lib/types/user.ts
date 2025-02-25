@@ -16,6 +16,16 @@ declare global {
     wallet_client_type?: string | undefined;
     connector_type?: string | undefined;
   }
+  interface PrivyGitHub {
+    type: 'github_oauth';
+    name: string | null;
+    email: string | null;
+    username: string | null;
+    verified_at: number;
+    first_verified_at: number | null;
+    latest_verified_at: number | null;
+    subject: string;
+  }
 
   /**
    * User
@@ -33,6 +43,8 @@ declare global {
     wallet: string | null;
     token?: any;
     captchaJwt?: any;
+    githubId?: number;
+    githubUsername?: string;
   }
 
   interface UserResponse extends GeneralResponse<UserInterface> {}
@@ -101,4 +113,10 @@ declare global {
     userId: number;
   }
   interface NotificationsResponse extends GeneralItemsResponse<NotificationInterface> {}
+
+  /*
+   * GitHub
+   */
+
+  interface GitHubLinkResponse extends GeneralResponse<UserInterface> {}
 }

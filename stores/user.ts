@@ -36,10 +36,13 @@ export const useUserStore = defineStore('user', {
     },
   },
   actions: {
-    logout() {
+    async logout() {
+      const { logout } = usePrivy();
       try {
         this.$reset();
         $api.clearToken();
+        // Logout from Privy
+        await logout();
         // TODO: Disconnect client
       } catch (e) {}
     },
@@ -76,6 +79,8 @@ export const useUserStore = defineStore('user', {
       if (this.jwt) {
         this.setUserToken(this.jwt);
         this.promises.profile = this.getUserData();
+      } else {
+        this.logout();
       }
     },
 
@@ -119,6 +124,22 @@ export const useUserStore = defineStore('user', {
         window.$message.error(apiError(error));
       } finally {
         this.notifications.loading = false;
+      }
+    },
+
+    async linkGithub(github: PrivyGitHub) {
+      if (this.user.githubId !== +github.subject || this.user.githubUsername !== github.username) {
+        try {
+          const res = await $api.put<GitHubLinkResponse>(Endpoints.githubLink, {
+            id: github.subject,
+            username: github.username,
+          });
+          if (res.data) {
+            this.saveUser(res.data);
+          }
+        } catch (error: any) {
+          console.log(error);
+        }
       }
     },
   },
