@@ -176,6 +176,20 @@ export default function useFixedMarketMaker() {
     const ids = positionIds.map(positionId => BigInt(positionId));
     const marketSharesAmounts = await ctContract.read.balanceOfBatch([owners, ids]);
 
+    const oracle = await initContract(ContractType.ORACLE);
+    const userFee = await oracle.read.userFee([userStore.wallet.address]);
+
+    let userFeeDecimal = null;
+    if (userFee === BigInt(0)) {
+      const fpmmContract = await initContract(ContractType.FPMM, fpmmContractAddress);
+      const fee = await fpmmContract.read.fee();
+      const feeBN = new Big(fee.toString());
+      userFeeDecimal = feeBN.div(parseEther('1').toString());
+    } else {
+      const userFeeBN = new Big(userFee.toString());
+      userFeeDecimal = userFeeBN.div(parseEther('1').toString());
+    }
+
     const marketSellingSharesAmounts = new Big(marketSharesAmounts[outcomeIndex]);
     const marketNonSellingSharesAmounts = marketSharesAmounts
       .filter((_, index) => index !== outcomeIndex)
@@ -192,7 +206,9 @@ export default function useFixedMarketMaker() {
        *   `r` (the unknown) is the amount of collateral that will be returned in exchange of `a` tokens
        */
 
-      const R = r.div(1);
+      const R = r.div(new Big(1).minus(userFeeDecimal)); // Adjust for fee
+
+      // const R = r.div(1 - userFee);
 
       // ((y - R) * (z - R))
       const firstTerm = marketNonSellingSharesAmounts.map(h => h.minus(R)).reduce((a, b) => a.mul(b));
