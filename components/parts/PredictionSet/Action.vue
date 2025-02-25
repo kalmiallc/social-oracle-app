@@ -99,6 +99,30 @@
               <div>Potential return</div>
               <div class="ml-auto text-statusGreen">{{ potentialReturn }} {{ tokenStore.symbol }}</div>
             </div>
+
+            <div class="flex flex-col items-center justify-center mt-2" v-if="displayFee">
+              <div class="flex flex-row w-full">
+                <div>Market fee</div>
+                <div :class="{ '!text-statusGreen': isFeeLowered }" class="ml-auto text-statusRed">
+                  {{ displayFee }} %
+                </div>
+              </div>
+
+              <div v-if="!isFeeLowered" class="w-full">
+                <BasicButton
+                  @click="router.push('/profile')"
+                  :btnClass="['bg-statusRed hover:bg-statusRed hover:bg-opacity-80']"
+                  class="w-full mt-3"
+                  >Learn how to lower your fees
+                </BasicButton>
+              </div>
+              <div
+                class="w-full flex items-center justify-center text-statusGreen font-semibold text-[14px] mt-3"
+                v-else
+              >
+                Congratulations! Your fees are lowered.
+              </div>
+            </div>
           </div>
         </n-tab-pane>
 
@@ -169,6 +193,30 @@
             <div class="flex items-center justify-center mt-2">
               <div>Potential return</div>
               <div class="ml-auto text-statusGreen">{{ potentialReturn }} {{ tokenStore.symbol }}</div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center mt-2" v-if="displayFee">
+              <div class="flex flex-row w-full">
+                <div>Market fee</div>
+                <div :class="{ '!text-statusGreen': isFeeLowered }" class="ml-auto text-statusRed">
+                  {{ displayFee }} %
+                </div>
+              </div>
+
+              <div v-if="!isFeeLowered" class="w-full">
+                <BasicButton
+                  @click="router.push('/profile')"
+                  :btnClass="['bg-statusRed hover:bg-statusRed hover:bg-opacity-80']"
+                  class="w-full mt-3"
+                  >Learn how to lower your fees
+                </BasicButton>
+              </div>
+              <div
+                class="w-full flex items-center justify-center text-statusGreen font-semibold text-[14px] mt-3"
+                v-else
+              >
+                Congratulations! Your fees are lowered.
+              </div>
             </div>
           </div>
         </n-tab-pane>
@@ -272,13 +320,14 @@ const props = defineProps({
   outcomes: { type: Array as PropType<OutcomeInterface[]>, default: [], required: true },
 });
 
-const { getMinTokensToBuy, addFunding, buy, sell, calcSellAmountInCollateral } = useFixedMarketMaker();
+const { getMinTokensToBuy, addFunding, buy, sell, calcSellAmountInCollateral, getMarketFee } = useFixedMarketMaker();
 const { refreshCollateralBalance, getTokenStore } = useCollateralToken();
 const { getConditionalBalance, parseConditionalBalance } = useConditionalToken();
 const message = useMessage();
 const txWait = useTxWait();
 const tokenStore = getTokenStore();
 const userStore = useUserStore();
+const router = useRouter();
 
 const selectedTab = ref(TransactionType.BUY);
 const isFundEnabled = ref(true);
@@ -286,6 +335,8 @@ const slippage = ref(5);
 const loading = ref(false);
 const amount = ref<number>();
 const potentialReturn = ref<string>('0.0');
+const displayFee = ref<any>(null);
+const isFeeLowered = ref(true);
 const returnAmount = ref<string>('0.0');
 const conditionalBalance = ref(BigInt(0));
 
@@ -310,6 +361,10 @@ onMounted(async () => {
   }
 
   await refreshCollateralBalance();
+
+  if (userStore.isConnected) {
+    await refreshFees();
+  }
 });
 
 watchEffect(async () => {
@@ -322,6 +377,15 @@ watch(
   () => props.action,
   () => {
     selectedTab.value = props.action;
+  }
+);
+
+watch(
+  () => userStore.isConnected,
+  async () => {
+    if (userStore.isConnected) {
+      await refreshFees();
+    }
   }
 );
 
@@ -500,6 +564,18 @@ async function refreshBalances() {
     await refreshCollateralBalance();
     conditionalBalance.value = await getConditionalBalance(props.outcome.positionId);
   } catch (error) {}
+}
+
+async function refreshFees() {
+  const { fee, userFee } = await getMarketFee(props.contractAddress as Address);
+
+  let returnFee = userFee;
+  if (BigInt(userFee) === BigInt(0)) {
+    returnFee = fee;
+    isFeeLowered.value = false;
+  }
+
+  displayFee.value = ((Number(returnFee) / Math.pow(10, 18)) * 100).toString();
 }
 </script>
 

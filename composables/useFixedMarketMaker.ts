@@ -14,6 +14,22 @@ export default function useFixedMarketMaker() {
   const userStore = useUserStore();
 
   /**
+   * Parses collateral token balance.
+   *
+   * @param fixed TO how many decimal points should the balance be parsed.
+   * @returns Parsed balance.
+   */
+  async function getMarketFee(fpmmContractAddress: Address) {
+    const oracle = await initContract(ContractType.ORACLE);
+    const fpmmContract = await initContract(ContractType.FPMM, fpmmContractAddress);
+
+    const userFee = await oracle.read.userFee([userStore.wallet.address]);
+    const fee = await fpmmContract.read.fee();
+
+    return { userFee, fee };
+  }
+
+  /**
    *
    * @param fpmmContractAddress
    * @param amount
@@ -247,5 +263,6 @@ export default function useFixedMarketMaker() {
     getFundingBalance,
     removeFunding,
     calcSellAmountInCollateral,
+    getMarketFee,
   };
 }
