@@ -1,4 +1,4 @@
-import { COLLATERAL_TOKEN_ABI, CONDITIONAL_TOKEN_ABI, FPMM_ABI } from './abi';
+import { COLLATERAL_TOKEN_ABI, CONDITIONAL_TOKEN_ABI, FPMM_ABI, ORACLE_ABI } from './abi';
 
 /**
  * Contract types.
@@ -7,6 +7,7 @@ export enum ContractType {
   CONDITIONAL_TOKEN = 1,
   COLLATERAL_TOKEN = 2,
   FPMM = 3,
+  ORACLE = 4,
 }
 
 /**
@@ -24,6 +25,9 @@ export function getContractAbi(contractType: ContractType): any {
 
     case ContractType.FPMM:
       return FPMM_ABI;
+
+    case ContractType.ORACLE:
+      return ORACLE_ABI;
     default:
       return null;
   }

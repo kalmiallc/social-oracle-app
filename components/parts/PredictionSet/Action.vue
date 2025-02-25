@@ -368,16 +368,12 @@ async function updateBuyAmount() {
     0
   );
 
-  console.log(resultNoSlippage);
-
   const returnNoSlippage = await calcSellAmountInCollateral(
     Number(resultNoSlippage) / Math.pow(10, tokenStore.decimals),
     props.outcome.outcomeIndex,
     props.contractAddress as Address,
     props.outcomes.map(o => o.positionId)
   );
-
-  console.log(returnNoSlippage);
 
   returnAmount.value = (Number(result) / Math.pow(10, tokenStore.decimals)).toString();
   potentialReturn.value = (Number(returnNoSlippage) / Math.pow(10, tokenStore.decimals)).toString();

@@ -57,6 +57,9 @@ export default function useContracts() {
 
       case ContractType.COLLATERAL_TOKEN:
         return config.public.COLLATERAL_TOKEN_CONTRACT as Address;
+
+      case ContractType.ORACLE:
+        return config.public.ORACLE_CONTRACT as Address;
     }
 
     return undefined;

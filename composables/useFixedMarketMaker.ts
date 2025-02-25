@@ -1,6 +1,6 @@
 import { newtonRaphson } from '@fvictorio/newton-raphson-method';
 import Big from 'big.js';
-import { type Address } from 'viem';
+import { parseEther, type Address } from 'viem';
 import { ContractType } from '~/lib/config/contracts';
 
 /**
