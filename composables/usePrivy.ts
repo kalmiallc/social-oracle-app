@@ -62,8 +62,7 @@ export const usePrivy = () => {
     try {
       const { url } = await privy.auth.oauth.generateURL(
         'github',
-        // removeLastSlash(getAppConfig(config.public.ENV).url) + '/github-login'
-        'https://example.com/'
+        removeLastSlash(getAppConfig(config.public.ENV).url) + '/github-login'
       );
       console.log(url);
       window.location.assign(url);
