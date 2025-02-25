@@ -97,7 +97,7 @@
             </div>
             <div class="flex items-center justify-center mt-2">
               <div>Potential return</div>
-              <div class="ml-auto text-statusGreen">1.273662 {{ tokenStore.symbol }}</div>
+              <div class="ml-auto text-statusGreen">{{ potentialReturn }} {{ tokenStore.symbol }}</div>
             </div>
           </div>
         </n-tab-pane>
@@ -168,7 +168,7 @@
             </div>
             <div class="flex items-center justify-center mt-2">
               <div>Potential return</div>
-              <div class="ml-auto text-statusGreen">1.273662 {{ tokenStore.symbol }}</div>
+              <div class="ml-auto text-statusGreen">{{ potentialReturn }} {{ tokenStore.symbol }}</div>
             </div>
           </div>
         </n-tab-pane>
@@ -269,9 +269,10 @@ const props = defineProps({
   status: { type: Number as PropType<PredictionSetStatus>, default: null, required: true },
   action: { type: Number as PropType<TransactionType>, default: null, required: false },
   endTime: { type: Date, default: null, required: false },
+  outcomes: { type: Array as PropType<OutcomeInterface[]>, default: [], required: true },
 });
 
-const { getMaxTokensToSell, getMinTokensToBuy, addFunding, buy, sell } = useFixedMarketMaker();
+const { getMinTokensToBuy, addFunding, buy, sell, calcSellAmountInCollateral } = useFixedMarketMaker();
 const { refreshCollateralBalance, getTokenStore } = useCollateralToken();
 const { getConditionalBalance, parseConditionalBalance } = useConditionalToken();
 const message = useMessage();
@@ -281,9 +282,10 @@ const userStore = useUserStore();
 
 const selectedTab = ref(TransactionType.BUY);
 const isFundEnabled = ref(true);
-const slippage = ref(0);
+const slippage = ref(5);
 const loading = ref(false);
 const amount = ref<number>();
+const potentialReturn = ref<string>('0.0');
 const returnAmount = ref<string>('0.0');
 const conditionalBalance = ref(BigInt(0));
 
@@ -328,11 +330,13 @@ watchDebounced(
   async () => {
     if (amount.value === 0) {
       returnAmount.value = '0.0';
+      potentialReturn.value = '0.0';
       return;
     }
 
     if (!amount.value) {
       returnAmount.value = '0.0';
+      potentialReturn.value = '0.0';
       return;
     }
 
@@ -357,7 +361,26 @@ async function updateBuyAmount() {
     slippage.value
   );
 
+  const resultNoSlippage = await getMinTokensToBuy(
+    props.contractAddress as Address,
+    amount.value,
+    props.outcome.outcomeIndex,
+    0
+  );
+
+  console.log(resultNoSlippage);
+
+  const returnNoSlippage = await calcSellAmountInCollateral(
+    Number(resultNoSlippage) / Math.pow(10, tokenStore.decimals),
+    props.outcome.outcomeIndex,
+    props.contractAddress as Address,
+    props.outcomes.map(o => o.positionId)
+  );
+
+  console.log(returnNoSlippage);
+
   returnAmount.value = (Number(result) / Math.pow(10, tokenStore.decimals)).toString();
+  potentialReturn.value = (Number(returnNoSlippage) / Math.pow(10, tokenStore.decimals)).toString();
 }
 
 async function updateSellAmount() {
@@ -365,14 +388,14 @@ async function updateSellAmount() {
     return;
   }
 
-  const result = await getMaxTokensToSell(
-    props.contractAddress as Address,
+  const result = await calcSellAmountInCollateral(
     amount.value,
     props.outcome.outcomeIndex,
-    slippage.value
+    props.contractAddress as Address,
+    props.outcomes.map(o => o.positionId)
   );
 
-  returnAmount.value = '';
+  potentialReturn.value = (Number(result) / Math.pow(10, tokenStore.decimals)).toString();
 }
 
 async function fund() {
@@ -405,18 +428,24 @@ async function sellOutcome() {
   transactionHash.value = '';
   loading.value = true;
   try {
-    await refreshCollateralBalance();
+    conditionalBalance.value = await getConditionalBalance(props.outcome.positionId);
 
-    if (!amount.value) {
+    if (!amount.value || !enoughConditionalBalance.value) {
       return;
     }
 
-    txWait.hash.value = await sell(
-      props.contractAddress as Address,
+    const collateralAmount = await calcSellAmountInCollateral(
       amount.value,
       props.outcome.outcomeIndex,
-      slippage.value,
-      props.outcome.latestChance.chance
+      props.contractAddress as Address,
+      props.outcomes.map(o => o.positionId)
+    );
+
+    txWait.hash.value = await sell(
+      props.contractAddress as Address,
+      collateralAmount,
+      props.outcome.outcomeIndex,
+      slippage.value
     );
     const receipt = await txWait.wait();
 
@@ -424,7 +453,7 @@ async function sellOutcome() {
     transactionHash.value = receipt?.data?.transactionHash || '';
 
     amount.value = '' as any;
-    await refreshCollateralBalance();
+    await refreshBalances();
   } catch (error) {
     console.error(error);
     message.error(contractError(error));
@@ -455,7 +484,7 @@ async function buyOutcome() {
     transactionHash.value = receipt?.data?.transactionHash || '';
 
     amount.value = '' as any;
-    await refreshCollateralBalance();
+    await refreshBalances();
   } catch (error) {
     console.error(error);
     message.error(contractError(error));
@@ -468,6 +497,13 @@ async function openExplorer(txHash: string) {
   const explorer = getChain().blockExplorers.default.url;
 
   window.open(`${explorer}/tx/${txHash}`, '_blank');
+}
+
+async function refreshBalances() {
+  try {
+    await refreshCollateralBalance();
+    conditionalBalance.value = await getConditionalBalance(props.outcome.positionId);
+  } catch (error) {}
 }
 </script>
 

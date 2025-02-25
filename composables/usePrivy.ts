@@ -1,6 +1,5 @@
 import Privy from '@privy-io/js-sdk-core';
-import { createWalletClient, custom, defineChain, type Address } from 'viem';
-import { baseSepolia } from 'viem/chains';
+import { createWalletClient, custom, type Address } from 'viem';
 
 export const usePrivy = () => {
   const { saveWallet, saveWalletClient } = useUserStore();

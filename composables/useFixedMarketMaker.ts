@@ -1,3 +1,5 @@
+import { newtonRaphson } from '@fvictorio/newton-raphson-method';
+import Big from 'big.js';
 import { type Address } from 'viem';
 import { ContractType } from '~/lib/config/contracts';
 
@@ -14,21 +16,6 @@ export default function useFixedMarketMaker() {
   /**
    *
    * @param fpmmContractAddress
-   * @param outcomeIndex
-   * @returns
-   */
-  async function getPricePerShare(fpmmContractAddress: Address, outcomeIndex: number) {
-    const amount = BigInt(Math.round(1 * 10 ** tokenStore.decimals));
-
-    const contract = await initContract(ContractType.FPMM, fpmmContractAddress);
-    const expectedShares = await contract.read.calcBuyAmount([amount, outcomeIndex]);
-
-    return amount / expectedShares;
-  }
-
-  /**
-   *
-   * @param fpmmContractAddress
    * @param amount
    * @param outcomeIndex
    * @param slippage
@@ -36,14 +23,18 @@ export default function useFixedMarketMaker() {
    */
   async function getMaxTokensToSell(
     fpmmContractAddress: Address,
-    amount: number,
+    collateralAmount: bigint,
     outcomeIndex: number,
     slippage: number
   ) {
     const contract = await initContract(ContractType.FPMM, fpmmContractAddress);
 
-    const sellAmount = await contract.read.calcSellAmount([amount, outcomeIndex]);
-    const maxOutcomeTokensToSell = sellAmount * (BigInt(100 - slippage) / BigInt(100));
+    const expectedShares = await contract.read.calcSellAmount([
+      collateralAmount,
+      outcomeIndex,
+      userStore.wallet.address,
+    ]);
+    const maxOutcomeTokensToSell = (expectedShares * BigInt(100 + slippage)) / BigInt(100);
 
     return maxOutcomeTokensToSell;
   }
@@ -65,7 +56,7 @@ export default function useFixedMarketMaker() {
     const contract = await initContract(ContractType.FPMM, fpmmContractAddress);
 
     const scaledAmount = BigInt(Math.round(amount * 10 ** tokenStore.decimals));
-    const expectedShares = await contract.read.calcBuyAmount([scaledAmount, outcomeIndex]);
+    const expectedShares = await contract.read.calcBuyAmount([scaledAmount, outcomeIndex, userStore.wallet.address]);
     const minOutcomeTokensToBuy = (expectedShares * BigInt(100 - slippage)) / BigInt(100);
 
     return minOutcomeTokensToBuy;
@@ -102,32 +93,22 @@ export default function useFixedMarketMaker() {
    * @param slippage
    * @returns
    */
-  async function sell(
-    fpmmContractAddress: Address,
-    sharesAmount: number,
-    outcomeIndex: number,
-    slippage: number,
-    price: number // TODO: Obtain price from contract.
-  ) {
+  async function sell(fpmmContractAddress: Address, collateralAmount: bigint, outcomeIndex: number, slippage: number) {
     if (!tokenStore.loaded) {
       await loadToken();
     }
-
     const contract = await initContract(ContractType.FPMM, fpmmContractAddress);
 
     const approved = await checkConditionalApprove(fpmmContractAddress);
     if (approved) {
-      const collateralAmount = sharesAmount * price;
-      const scaledAmount = BigInt(Math.round(collateralAmount * 10 ** tokenStore.decimals));
-
-      const minOutcomeTokensToBuy = await getMinTokensToBuy(
+      const maxOutcomeTokensToSell = await getMaxTokensToSell(
         fpmmContractAddress,
         collateralAmount,
         outcomeIndex,
         slippage
       );
 
-      return await contract.write.sell([scaledAmount, outcomeIndex, minOutcomeTokensToBuy]);
+      return await contract.write.sell([collateralAmount, outcomeIndex, maxOutcomeTokensToSell]);
     }
   }
 
@@ -174,14 +155,81 @@ export default function useFixedMarketMaker() {
     return await contract.write.removeFunding([Number(shareAmount)]);
   }
 
+  /**
+   *
+   * @param sharesAmount
+   * @param outcomeIndex
+   * @param fpmmContractAddress
+   * @param positionIds
+   * @returns
+   */
+  async function calcSellAmountInCollateral(
+    sharesAmount: number,
+    outcomeIndex: number,
+    fpmmContractAddress: Address,
+    positionIds: string[]
+  ) {
+    Big.DP = 90;
+
+    const ctContract = await initContract(ContractType.CONDITIONAL_TOKEN);
+    const owners = positionIds.map(() => fpmmContractAddress);
+    const ids = positionIds.map(positionId => BigInt(positionId));
+    const marketSharesAmounts = await ctContract.read.balanceOfBatch([owners, ids]);
+
+    const marketSellingSharesAmounts = new Big(marketSharesAmounts[outcomeIndex]);
+    const marketNonSellingSharesAmounts = marketSharesAmounts
+      .filter((_, index) => index !== outcomeIndex)
+      .map(marketShares => new Big(marketShares));
+    const sharesToSell = new Big(Math.round(sharesAmount * 10 ** tokenStore.decimals));
+
+    const f = r => {
+      /* For three outcomes, where the `x` is the one being sold, the formula is:
+       * f(r) = ((y - R) * (z - R)) * (x  + a - R) - (x * y * z)
+       * where:
+       *   `R` is r / (1 - fee)
+       *   `x`, `y`, `z` are the market maker shares for each outcome, where `x` is the market maker share being sold
+       *   `a` is the amount of outcomes shares that are being sold
+       *   `r` (the unknown) is the amount of collateral that will be returned in exchange of `a` tokens
+       */
+
+      const R = r.div(1);
+
+      // ((y - R) * (z - R))
+      const firstTerm = marketNonSellingSharesAmounts.map(h => h.minus(R)).reduce((a, b) => a.mul(b));
+
+      // (x  + a - R)
+      const secondTerm = marketSellingSharesAmounts.plus(sharesToSell).minus(R);
+
+      // (x * y * z)
+      const thirdTerm = marketNonSellingSharesAmounts.reduce((a, b) => a.mul(b), marketSellingSharesAmounts);
+
+      // ((y - R) * (z - R)) * (x  + a - R) - (x * y * z)
+      return firstTerm.mul(secondTerm).minus(thirdTerm);
+    };
+
+    /* Newton-Raphson method is used to find the root of a function.
+     * Root of a function is the point where the function touches the x-axis on a graph.
+     * In this case y-axis is the number of outcome tokens / shares.
+     * The x-axis is the number of colleral tokens to be received.
+     * This meaning we want to know how much collateral we need to receive to have 0 outcome tokens / shares.
+     */
+    const r = newtonRaphson(f, 0, { maxIterations: 100 });
+
+    if (!r) {
+      return null;
+    }
+
+    return BigInt(r.toFixed(0)) as any;
+  }
+
   return {
     getMaxTokensToSell,
     getMinTokensToBuy,
     addFunding,
     buy,
     sell,
-    getPricePerShare,
     getFundingBalance,
     removeFunding,
+    calcSellAmountInCollateral,
   };
 }

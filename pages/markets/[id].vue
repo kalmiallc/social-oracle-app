@@ -140,6 +140,7 @@
           :action="selectedAction"
           :status="predictionSet.setStatus"
           :end-time="predictionSet.endTime"
+          :outcomes="predictionSet.outcomes"
         >
         </PredictionSetAction>
 
