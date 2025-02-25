@@ -117,7 +117,8 @@
                 </BasicButton>
               </div>
               <div
-                class="w-full flex items-center justify-center text-statusGreen font-semibold text-[14px] mt-3"
+                @click="router.push('/profile')"
+                class="w-full flex items-center justify-center text-statusGreen hover:opacity-80 cursor-pointer font-semibold text-[14px] mt-4"
                 v-else
               >
                 Congratulations! Your fees are lowered.
@@ -212,7 +213,8 @@
                 </BasicButton>
               </div>
               <div
-                class="w-full flex items-center justify-center text-statusGreen font-semibold text-[14px] mt-3"
+                @click="router.push('/profile')"
+                class="w-full flex items-center justify-center text-statusGreen hover:opacity-80 cursor-pointer font-semibold text-[14px] mt-4"
                 v-else
               >
                 Congratulations! Your fees are lowered.
