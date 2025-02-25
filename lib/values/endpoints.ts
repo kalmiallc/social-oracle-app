@@ -3,6 +3,7 @@ const Endpoints = {
   me: '/users/me',
   walletMessage: '/users/wallet-message',
   walletLogin: '/users/wallet-login',
+  githubLink: '/users/github-link',
 
   // NOT USED
   changeMail: '/users/change-email',

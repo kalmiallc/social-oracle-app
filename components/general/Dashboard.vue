@@ -91,7 +91,7 @@ onMounted(async () => {
   const connected = await isConnected();
 
   if (!connected || !userStore.loggedIn) {
-    userStore.logout();
+    await userStore.logout();
   } else {
     userStore.setConnected(true);
     await refreshData();

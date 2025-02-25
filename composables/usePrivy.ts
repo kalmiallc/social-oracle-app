@@ -1,5 +1,6 @@
 import Privy from '@privy-io/js-sdk-core';
 import { createWalletClient, custom, type Address } from 'viem';
+import { removeLastSlash } from '~/lib/misc/strings';
 
 export const usePrivy = () => {
   const { saveWallet, saveWalletClient } = useUserStore();
@@ -56,5 +57,33 @@ export const usePrivy = () => {
     }
   }
 
-  return { privy, isConnected, refreshData };
+  async function connectGithub() {
+    const config = useRuntimeConfig();
+    try {
+      const { url } = await privy.auth.oauth.generateURL(
+        'github',
+        removeLastSlash(getAppConfig(config.public.ENV).url) + '/github-login'
+      );
+      window.location.assign(url);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Logout from Privy. We need to manually delete cookies for it to work.
+  async function logout() {
+    if (await isConnected()) {
+      await privy.auth.logout();
+    }
+    deleteCookies();
+  }
+
+  function deleteCookies() {
+    const cookies = ['privy-token', 'privy-session', 'privy-refresh-token', 'privy-id-token'];
+    for (const cookie of cookies) {
+      document.cookie = cookie + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+  }
+
+  return { privy, isConnected, refreshData, connectGithub, logout };
 };
