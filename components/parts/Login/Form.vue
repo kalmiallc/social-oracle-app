@@ -66,7 +66,7 @@
 import Endpoints from '~/lib/values/endpoints';
 import { removeLastSlash } from '../../../lib/misc/strings';
 
-const { privy, refreshData } = usePrivy();
+const { privy, refreshData, connectGithub } = usePrivy();
 const { refreshCollateralBalance } = useCollateralToken();
 
 const userStore = useUserStore();
@@ -93,16 +93,7 @@ async function openPrivy() {
 }
 
 async function openGitHub() {
-  const config = useRuntimeConfig();
-  try {
-    const { url } = await privy.auth.oauth.generateURL(
-      'github',
-      removeLastSlash(getAppConfig(config.public.ENV).url) + '/github-login'
-    );
-    window.location.assign(url);
-  } catch (error) {
-    console.error(error);
-  }
+  await connectGithub();
 }
 
 async function sendEmail() {
