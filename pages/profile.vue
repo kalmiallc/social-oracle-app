@@ -5,7 +5,8 @@
         <FormUserProfile />
       </FormWrapper>
 
-<<<<<<< Updated upstream
+      <FormWrapper class="mt-8" :title="'Connections'"> <FormUserGithub /></FormWrapper>
+
       <FormWrapper class="mt-8" :title="'GitHub bonuses'">
         <div>
           Being an active part of developer community and contributing to open source project can bring you some
@@ -51,9 +52,6 @@
           </tbody>
         </n-table>
       </FormWrapper>
-=======
-      <FormWrapper class="mt-8" :title="'Connections'"> <FormUserGithub /></FormWrapper>
->>>>>>> Stashed changes
     </slot>
   </Dashboard>
 </template>

@@ -75,6 +75,6 @@ onMounted(async () => {
         return;
       }
     }
-  } else router.push('/');
+  }
 });
 </script>
