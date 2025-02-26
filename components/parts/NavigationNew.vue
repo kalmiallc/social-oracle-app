@@ -30,6 +30,30 @@ const menuOptions = [
     iconName: 'icon/github',
   },
   {
+    label: 'Youtube',
+    key: 'youtube',
+    to: 'youtube',
+    iconName: 'icon/youtube',
+  },
+  {
+    label: 'IMBd',
+    key: 'imbd',
+    to: 'imbd',
+    iconName: 'icon/imbd',
+  },
+  {
+    label: 'X',
+    key: 'x',
+    to: 'x',
+    iconName: 'icon/x',
+  },
+  {
+    label: 'Instagram',
+    key: 'instagram',
+    to: 'instagram',
+    iconName: 'icon/instagram',
+  },
+  {
     label: 'LinkedIn',
     key: 'linkedin',
     to: 'linkedin',

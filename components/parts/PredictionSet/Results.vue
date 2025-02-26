@@ -13,7 +13,6 @@
 
     <div v-if="canClaim" class="flex items-center justify-center mt-5">
       <NuxtIcon name="icon/star" class="text-primary text-[17px]" />
-      <div class="ml-[4px] text-[14px] leading-[20px] font-medium mr-5 text-white/60">0.35$</div>
       <BasicButton :loading="loading" @click="claimWinnings" size="small" class="py-[6px] px-[10px]">Claim</BasicButton>
     </div>
 
@@ -37,7 +36,6 @@ import type { OutcomeInterface } from '~/lib/types/prediction-set';
 
 const { getConditionalBalance, claim } = useConditionalToken();
 const { getFundingBalance, removeFunding } = useFixedMarketMaker();
-const { ensureCorrectNetwork } = useContracts();
 const message = useMessage();
 const txWait = useTxWait();
 
@@ -79,8 +77,6 @@ async function claimWinnings() {
 
   loading.value = true;
   try {
-    await ensureCorrectNetwork();
-
     txWait.hash.value = await claim(props.conditionId, props.outcome.outcomeIndex);
     const receipt = await txWait.wait();
 
@@ -102,8 +98,6 @@ async function withdrawFunding() {
 
   loading.value = true;
   try {
-    await ensureCorrectNetwork();
-
     txWait.hash.value = await removeFunding(props.contractAddress, fundingBalance.value);
     await txWait.wait();
 

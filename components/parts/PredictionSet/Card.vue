@@ -61,10 +61,8 @@
         <div v-if="predictionSet.setStatus === PredictionSetStatus.FUNDING">
           <BasicButton :size="'small'" :btnClass="['bg-statusBlue hover:bg-statusBlue-hover']">Fund</BasicButton>
         </div>
-        <!-- TODO: Check for potential return. -->
         <div v-else class="flex items-center justify-center">
           <NuxtIcon name="icon/star" class="text-primary" />
-          <div class="ml-[6px] font-medium">0.35$</div>
         </div>
       </div>
     </div>

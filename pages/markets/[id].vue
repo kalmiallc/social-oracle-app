@@ -20,10 +20,6 @@
               <div class="text-white/80 text-[14px] leading-[20px]">
                 Ends on {{ toMonthAndYear(predictionSet.endTime) }}
               </div>
-
-              <div class="mx-4 border-r-1 border-r-white/25 h-[14px]"></div>
-
-              <div class="text-white/80 text-[14px] leading-[20px]">1,283 USDC</div>
             </div>
           </div>
         </div>
@@ -40,12 +36,10 @@
                 <img class="rounded-[78px] w-full h-full object-cover" :src="outcome.imgUrl" />
               </div>
 
-              <div class="flex flex-col ml-4">
-                <div class="text-[16px] leading-[24px] font-bold text-white pt-[4px]">
+              <div class="flex ml-4 items-center">
+                <div class="text-[16px] leading-[24px] font-bold text-white">
                   {{ outcome.name }}
                 </div>
-
-                <div class="text-[14px] leading-[20px] font-medium text-grey-lightest mt-[4px]">$ 1,845,924</div>
               </div>
             </div>
 
