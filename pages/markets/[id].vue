@@ -1,7 +1,7 @@
 <template>
   <Dashboard :loading="loading">
     <div v-if="predictionSet" class="flex flex-row justify-center">
-      <div class="flex flex-col max-w-[736px]">
+      <div class="flex flex-col max-w-[400px] md:max-w-[640px] lg:max-w-[736px]">
         <!-- HEADER -->
         <div class="flex">
           <div class="w-[80px] h-[80px] flex-shrink-0">
@@ -24,13 +24,27 @@
           </div>
         </div>
 
+        <div class="mt-10">
+          <PredictionSetGraph
+            v-if="params?.id"
+            :prediction-id="+params.id"
+            :outcomes="graphOutcomes"
+            :start-time="predictionSet.startTime"
+            :end-time="predictionSet.endTime"
+          />
+        </div>
+
         <!-- OUTCOMES -->
         <div class="flex flex-col gap-y-[6px] mt-10">
           <div
-            v-for="outcome in predictionSet.outcomes"
-            class="flex bg-grey rounded-lg pl-3 py-[6px] items-center w-full"
+            v-for="(outcome, i) in predictionSet.outcomes"
+            class="flex bg-grey rounded-lg pl-3 py-[6px] items-center w-full relative"
             :class="{ 'border-1 border-primary': winningOutcome?.id === outcome.id }"
           >
+            <div
+              class="absolute w-0.5 h-6 left-0 top-1/2 bottom-1/2 -translate-y-1/2"
+              :style="{ backgroundColor: outcomeColors[i] }"
+            ></div>
             <div class="flex">
               <div class="w-[56px] h-[56px] flex-shrink-0">
                 <img class="rounded-[78px] w-full h-full object-cover" :src="outcome.imgUrl" />
@@ -100,7 +114,7 @@
               class="ml-auto font-bold hover:text-primary cursor-pointer"
               @click="openExplorer(predictionSet.chainData.contractAddress)"
             >
-              {{ shortenAddress(predictionSet.chainData.contractAddress) }}
+              {{ shortenAddress(predictionSet.chainData?.contractAddress ?? '') }}
             </div>
             <NuxtIcon
               class="ml-2 text-white cursor-pointer"
@@ -167,6 +181,9 @@ import {
 } from '~/lib/types/prediction-set';
 import Endpoints from '~/lib/values/endpoints';
 
+// Chart colors
+const outcomeColors = ['#F95F85', '#4A61C9', '#639266', '#F1B11B'];
+
 const REFRESH_INTERVAL = 10_000;
 
 const { params } = useRoute();
@@ -179,6 +196,7 @@ const predictionSet = ref<PredictionSetInterface | null>();
 const selectedOutcome = ref();
 const selectedAction = ref();
 const winningOutcome = ref();
+const graphOutcomes = ref();
 
 onMounted(async () => {
   await sleep(10);
@@ -198,6 +216,12 @@ async function getPredictionSet(silent: boolean = false) {
   try {
     const res = await $api.get<PredictionSetResponse>(Endpoints.predictionSetsById(Number(params?.id)));
     predictionSet.value = res.data;
+
+    graphOutcomes.value = res.data.outcomes.map((o, i) => ({
+      id: o.id,
+      name: o.name,
+      color: outcomeColors?.[i],
+    }));
 
     if (predictionSet.value.setStatus === PredictionSetStatus.FINALIZED) {
       winningOutcome.value = predictionSet.value.outcomes.find(o => o.id === predictionSet.value?.winner_outcome_id);

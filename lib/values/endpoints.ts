@@ -13,6 +13,7 @@ const Endpoints = {
   /** Prediction Sets */
   predictionSets: '/prediction-sets',
   predictionSetsById: (id: number) => `/prediction-sets/${id}`,
+  predictionSetChanceHistory: (id: number) => `/prediction-sets/${id}/chance-history`,
 };
 
 export default Endpoints;
