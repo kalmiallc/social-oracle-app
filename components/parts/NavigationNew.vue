@@ -36,12 +36,6 @@ const menuOptions = [
     iconName: 'icon/youtube',
   },
   {
-    label: 'IMBd',
-    key: 'imbd',
-    to: 'imbd',
-    iconName: 'icon/imbd',
-  },
-  {
     label: 'X',
     key: 'x',
     to: 'x',

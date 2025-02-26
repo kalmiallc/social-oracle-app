@@ -5,15 +5,15 @@
   >
     <div class="flex border-b border-white/10 pb-3 cursor-pointer" @click="openDetails()">
       <div class="w-[38px] h-[38px] flex-shrink-0">
-        <img class="rounded-[8px] w-full h-full object-cover" :src="predictionSet.imgUrl" />
+        <img class="rounded-full w-full h-full object-cover" :src="predictionSet.imgUrl" />
       </div>
-      <div class="ml-4 text-[14px] leading-[20px] font-medium">
+      <div class="ml-4 text-[14px] leading-[20px] font-medium max-h-[40px] overflow-y-auto scroll-container">
         {{ predictionSet.question }}
       </div>
     </div>
 
     <div class="relative">
-      <div class="flex flex-col border-b border-white/10 pb-3 scroll-container h-[100px] overflow-y-scroll">
+      <div class="flex flex-col border-b border-white/10 pb-3 scroll-container max-h-[100px] overflow-y-scroll">
         <div class="pb-[20px]">
           <div
             class="flex flex-row w-full mt-[10px] font-medium cursor-pointer"
@@ -59,7 +59,12 @@
       </div>
       <div class="ml-auto flex items-center justify-center">
         <div v-if="predictionSet.setStatus === PredictionSetStatus.FUNDING">
-          <BasicButton :size="'small'" :btnClass="['bg-statusBlue hover:bg-statusBlue-hover']">Fund</BasicButton>
+          <BasicButton
+            @click="openDetails(TransactionType.FUND)"
+            :size="'small'"
+            :btnClass="['bg-statusBlue hover:bg-statusBlue-hover']"
+            >Fund</BasicButton
+          >
         </div>
         <div v-else class="flex items-center justify-center">
           <NuxtIcon name="icon/star" class="text-primary" />

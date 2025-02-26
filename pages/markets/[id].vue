@@ -5,7 +5,7 @@
         <!-- HEADER -->
         <div class="flex">
           <div class="w-[80px] h-[80px] flex-shrink-0">
-            <img class="rounded-[8px] w-full h-full object-cover" :src="predictionSet.imgUrl" />
+            <img class="rounded-full w-full h-full object-cover" :src="predictionSet.imgUrl" />
           </div>
           <div class="flex flex-col ml-8">
             <div class="text-[24px] leading-[34px] font-bold text-white mt-[5px]">
