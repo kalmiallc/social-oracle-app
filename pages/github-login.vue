@@ -66,7 +66,7 @@ onMounted(async () => {
       } else {
         message.error('Error linking github. Please try again later.');
       }
-
+      console.error(error);
       if (userStore.loggedIn) {
         router.push('/profile');
         return;

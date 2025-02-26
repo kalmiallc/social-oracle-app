@@ -39,6 +39,8 @@ export const usePrivy = () => {
       // Create provider.
       const provider = await privy.embeddedWallet.getProvider(wallet as any);
 
+      await sleep(500);
+
       // Switch chain.
       await provider.request({
         method: 'wallet_switchEthereumChain',
