@@ -81,6 +81,8 @@ const options = ref({
       showMaxLabel: false,
     },
     position: 'right',
+    max: 1,
+    min: 0
   },
   tooltip: {
     trigger: 'axis',
