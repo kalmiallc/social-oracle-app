@@ -74,3 +74,13 @@ export interface OutcomeChance extends GeneralInterface {
   supply: number;
   totalSupply: number;
 }
+
+export interface PredictionSetChanceHistoryResponse extends GeneralResponse<PredictionSetOutcomeChanceInterface> {}
+
+export interface PredictionSetOutcomeChanceInterface {
+  [outcomeId: number]: {
+    outcomeId: number;
+    chance: number;
+    date: Date;
+  }[];
+}
