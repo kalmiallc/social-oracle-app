@@ -24,7 +24,7 @@
           </div>
         </div>
 
-        <div class="mt-10">
+        <div class="mt-10" v-if="predictionSet.setStatus !== PredictionSetStatus.FUNDING">
           <PredictionSetGraph
             v-if="params?.id"
             :prediction-id="+params.id"

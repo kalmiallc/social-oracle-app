@@ -1,5 +1,5 @@
 <template>
-  <div ref="grid" class="grid grid-cols-4 gap-4">
+  <div ref="grid" class="grid grid-cols-4 gap-4 max-h-[82vh] overflow-y-scroll pr-2">
     <PredictionSetCard :predictionSet="predictionSet" v-for="predictionSet in predictionSets"></PredictionSetCard>
   </div>
 </template>
@@ -17,7 +17,7 @@ const message = useMessage();
 const grid = ref();
 const predictionSets = ref(<any[]>[]);
 const loading = ref(false);
-const page = ref(1);
+const page = ref(0);
 const limit = ref(20);
 const total = ref(0);
 
@@ -69,3 +69,28 @@ async function getPredictionSets() {
   }
 }
 </script>
+
+<style>
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 1rem;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  background: #b14ab3;
+  border-radius: 1rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  opacity: 0.7;
+}
+</style>
