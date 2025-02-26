@@ -51,14 +51,10 @@ onMounted(async () => {
         } catch (error) {
           console.log(error);
         }
-        router.push('/');
         message.success('Log in successful.');
-        return;
       } else {
         await userStore.linkGithub(github);
         message.success('Link successful.');
-        router.push('/profile');
-        return;
       }
     } catch (error: any) {
       if (typeof error?.error === 'string') {
@@ -66,15 +62,17 @@ onMounted(async () => {
       } else {
         message.error('Error linking github. Please try again later.');
       }
-
-      if (userStore.loggedIn) {
-        router.push('/profile');
-        return;
-      } else {
-        router.push('/');
-        return;
-      }
+      console.error(error);
     }
+  } else {
+    message.error('Error linking github. Please try again later.');
+  }
+  if (userStore.loggedIn) {
+    router.push('/profile');
+    return;
+  } else {
+    router.push('/');
+    return;
   }
 });
 </script>

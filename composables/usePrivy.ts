@@ -36,8 +36,12 @@ export const usePrivy = () => {
       const chain = getChain();
       const chainIdHex = `0x${chain.id.toString(16).toUpperCase()}`;
 
+      await sleep(500);
+
       // Create provider.
       const provider = await privy.embeddedWallet.getProvider(wallet as any);
+
+      await sleep(500);
 
       // Switch chain.
       await provider.request({
@@ -62,10 +66,10 @@ export const usePrivy = () => {
     try {
       const { url } = await privy.auth.oauth.generateURL(
         'github',
-        removeLastSlash(getAppConfig(config.public.ENV).url) + '/github-login'
+        removeLastSlash(getAppConfig(config.public.ENV).url) + '/github-login/'
       );
       console.log(url);
-      window.location.assign(encodeURI(url));
+      window.location.assign(url);
     } catch (error) {
       console.error(error);
     }

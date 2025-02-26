@@ -21,8 +21,8 @@ export enum PageSize {
 }
 
 export const WebStorageKeys = {
-  USER_STORE: 'len_user_store',
-  TX_STORE: 'len_tx_store',
+  USER_STORE: 'so_user_store',
+  TX_STORE: 'so_tx_store',
 };
 export const LS_KEYS = {
   APP_VERSION: 'social_oracle_app_version',
