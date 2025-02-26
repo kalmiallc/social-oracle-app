@@ -36,6 +36,8 @@ export const usePrivy = () => {
       const chain = getChain();
       const chainIdHex = `0x${chain.id.toString(16).toUpperCase()}`;
 
+      await sleep(500);
+
       // Create provider.
       const provider = await privy.embeddedWallet.getProvider(wallet as any);
 

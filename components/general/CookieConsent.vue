@@ -48,7 +48,7 @@
 import { useGtm } from '@gtm-support/vue-gtm';
 import GraphicsCookies from '~/assets/icons/dashboard/cookies.svg';
 
-const COOKIE_KEY = 'len_vue-cookie-accept-decline-cookieConsent';
+const COOKIE_KEY = 'so_vue-cookie-accept-decline-cookieConsent';
 
 const config = useRuntimeConfig();
 const gtm = useGtm();

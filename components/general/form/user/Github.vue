@@ -26,8 +26,6 @@ onMounted(async () => {
 
   const user = (await privy.user.get()).user;
 
-  console.log(user);
-
   const userGithub = user?.linked_accounts.find(acc => acc.type === 'github_oauth');
   if (userGithub?.username) {
     github.value = userGithub.username;

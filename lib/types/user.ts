@@ -45,6 +45,9 @@ declare global {
     captchaJwt?: any;
     githubId?: number;
     githubUsername?: string;
+    githubFollowers?: number;
+    githubContributions?: number;
+    githubTier?: number;
   }
 
   interface UserResponse extends GeneralResponse<UserInterface> {}
