@@ -16,7 +16,7 @@
 
       <BasicButton class="w-full mt-3" size="large" :loading="loading" @click="sendEmail">Submit</BasicButton>
       <BasicButton class="w-full mt-3" size="large" :loading="loading" @click="openGitHub">
-        <div class="flex items-center gap-2"><NuxtIcon name="icon/github" />Github</div>
+        <div class="flex items-center gap-2 pt-1"><NuxtIcon name="icon/github" />GitHub</div>
       </BasicButton>
     </div>
 
@@ -64,7 +64,6 @@
 
 <script lang="ts" setup>
 import Endpoints from '~/lib/values/endpoints';
-import { removeLastSlash } from '../../../lib/misc/strings';
 
 const { privy, refreshData, connectGithub } = usePrivy();
 const { refreshCollateralBalance } = useCollateralToken();
@@ -120,7 +119,6 @@ async function logIn() {
   loading.value = true;
   try {
     try {
-      console.log(otpCode.value);
       await privy.auth.email.loginWithCode(email.value, otpCode.value, 'login-or-sign-up', {
         embedded: { ethereum: { createOnLogin: 'users-without-wallets' } },
       });

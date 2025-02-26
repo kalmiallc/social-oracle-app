@@ -9,7 +9,7 @@
         :loading="loading"
       />
       <BasicButton v-if="!github && !loading" class="ml-4" btnClass="h-[40px]" @click="linkGithub">
-        <NuxtIcon name="icon/github" class="text-[20px]"
+        <NuxtIcon name="icon/github" class="text-[20px] pt-1"
       /></BasicButton>
     </n-form-item>
   </n-form>
