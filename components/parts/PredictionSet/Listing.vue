@@ -17,7 +17,7 @@ const message = useMessage();
 const grid = ref();
 const predictionSets = ref(<any[]>[]);
 const loading = ref(false);
-const page = ref(0);
+const page = ref(1);
 const limit = ref(20);
 const total = ref(0);
 
