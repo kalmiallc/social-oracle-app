@@ -148,6 +148,8 @@ const { isXl } = useScreen();
 
 # Installation and Running the Application
 
+Application needs deployed smart contracts and running backend.
+
 1. **Install Dependencies**  
    ```bash
    npm install
