@@ -6,6 +6,45 @@
 
 This repository contains source code for the Social Oracle application frontend.
 
+**Social Oracle** is a decentralized prediction marketplace focused on social events and platform-based outcomes. It enables users to trade outcome shares (e.g., *Yes* or *No*) for events tied to platforms like LinkedIn, X (formerly Twitter), Twitch, LinkedIn, Youtube, IMDB, etc.  
+
+# Social Oracle Repositories  
+
+The complete application is divided into three repositories:  
+
+- **Frontend (FE):** [https://github.com/kalmiallc/social-oracle-app](https://github.com/kalmiallc/social-oracle-app)  
+- **Backend (BE):** [https://github.com/kalmiallc/social-oracle-backend](https://github.com/kalmiallc/social-oracle-backend)  
+- **Smart Contracts (SC):** [https://github.com/kalmiallc/social-oracle-contracts](https://github.com/kalmiallc/social-oracle-contracts)  
+
+A full description of the product, including functionality and usage, can be found in the repository of the **Frontend application**.
+
+**Tehnical descripiton** can be found [here](https://github.com/kalmiallc/social-oracle-backend/blob/main/TehnicalDescription.md)
+
+## Core Features  
+
+- **Prediction Market:**  
+  Users buy or sell outcome shares for various events. Share prices are dynamically adjusted based on the ratio of investments in competing outcomes.  
+
+- **Event Resolution:**  
+  Upon market resolution, users who backed the correct outcome are rewarded, including a share of the investments from losing predictions.  
+
+- **Transaction Fees:**  
+  A small transaction fee is applied to each trade.  
+
+- **Social Platform Integration:**  
+  Events are designed to reflect social platform activity, with examples including:  
+  - LinkedIn engagement metrics  
+  - X (Twitter) trends  
+  - Twitch viewership milestones  
+  - IMDB ratings and reviews  
+
+- **Privy Embedded Wallet:**  
+  Social Oracle integrates with the **Privy embedded wallet** to enable seamless user authentication via social platforms.  
+
+- **Gihub Perks:**   
+  Users with high GitHub contributions and followers benefit from reduced transaction fees.  
+
+
 ## Stack
 
 - node 20.8.1
@@ -105,3 +144,20 @@ const { isXl } = useScreen();
 <div v-if="screens.isXl" class="w-8 h-8 bg-red"></div>
 <div v-else class="w-8 h-8 bg-blue"></div>
 ```
+
+
+# Installation and Running the Application
+
+1. **Install Dependencies**  
+   ```bash
+   npm install
+   ```
+
+2. **Setup config**  
+  
+  Set up needed variables in the `lib/config/development.ts`
+
+2. **Run application**  
+   ```bash
+   npm run dev
+   ```
