@@ -577,7 +577,7 @@ async function refreshFees() {
     isFeeLowered.value = false;
   }
 
-  displayFee.value = ((Number(returnFee) / Math.pow(10, 18)) * 1000).toString();
+  displayFee.value = ((Number(returnFee) / Math.pow(10, 18)) * 100).toString();
 }
 </script>
 
